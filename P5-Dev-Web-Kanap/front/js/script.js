@@ -16,7 +16,8 @@ console.log('------------openclassroom await-----------------');
 const reponse = await fetch(urlAPI);
 //transforme en json exploitable
 const reponseJSON = await reponse.json();
-/*console.log(reponseJSON);
+console.log(reponseJSON);
+/*
 console.log(reponseJSON[1]);
 console.log(reponseJSON[1].name);
 const reponseID = await fetch(`${urlAPI}77711f0e466b4ddf953f677d30b0efc9`);
