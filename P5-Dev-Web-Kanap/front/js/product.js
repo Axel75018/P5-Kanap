@@ -56,7 +56,7 @@ const listeCouleurs = document.querySelector("#colors");
 
         //couleurs
         listeCouleurs.innerHTML ='<option value="">--SVP, choisissez une couleur --</option>';
-        // boucle des différentes options
+        // boucle des différentes couleurs dispo
         for (let j=0; j<reponseJSON.colors.length; j++) {
             console.log(reponseJSON.colors[j]);
             const optionCouleurs = document.createElement("option");
