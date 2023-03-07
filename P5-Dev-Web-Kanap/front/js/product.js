@@ -89,7 +89,7 @@ panierAjouts.addEventListener("click", function () {
 
     // enrgistre dans locale storage panier
     
-localStorage.setItem("panier", JSON.stringify({'id': nameID2,'couleur':valCouleur,'Quantité':valQ}))
+localStorage.setItem("panier", JSON.stringify([nameID2,valCouleur,valQ]))
 }
 
     });
