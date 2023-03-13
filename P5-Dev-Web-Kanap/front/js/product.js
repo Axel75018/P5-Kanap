@@ -1,5 +1,5 @@
 //import ajout panier
-//import{ajoutCart} from './cart.js';
+import{ajoutCart} from './cart.js';
 
 
 
@@ -65,31 +65,37 @@ for (let j = 0; j < reponseJSON.colors.length; j++) {
     listeCouleurs.appendChild(optionCouleurs);
 }
 
-//cart en local intitulé
-const cartID = "id";
-const cartCouleur = "couleur";
-const cartQuantite = "quantite";
-const cartPrix ="prix";
-const cartNom ="nom"
 
 const panierAjouts = document.querySelector("#addToCart");
+const valCouleur = document.querySelector("#colors").value;
+const valQ = document.querySelector("#quantity").value;
 
-// ajout panier au click
+console.log('check val');
+console.log(valCouleur);
+
+
 panierAjouts.addEventListener("click", function () {
+// recupération des valeurs au click
+const valCouleur = document.querySelector("#colors").value;
+const valQ = document.querySelector("#quantity").value;    
+    ajoutCart(nameID2,valCouleur, valQ)
+});
 
+/**  ajout panier au click
+
+panierAjouts.addEventListener("click", function () {
     //Lecture valeur form
-    const valCouleur = document.querySelector("#colors").value;
-    const valQ = document.querySelector("#quantity").value;
     
+
     // controle  couleur présent et  q >0 <100
-    if (valCouleur == "" || valQ < 0 || valQ > 100 )
-{ alert('Séletionnez une couleur ET une quantité'); }
-         else {
-    
+    if (valCouleur == "" || valQ < 0 || valQ > 100) { alert('Séletionnez une couleur ET une quantité'); }
+    else {
 
-    // enrgistre dans locale storage panier
-    
-localStorage.setItem("panier", JSON.stringify([nameID2,valCouleur,valQ]))
+
+        // enrgistre dans locale storage panier
+
+        localStorage.setItem("panier", JSON.stringify([nameID2, valCouleur, valQ]))
+    }
 }
-
-    });
+) ;
+**/

@@ -12,18 +12,10 @@ console.log(couleur);
 //crétation fonction
 
 export function ajoutCart(id, couleur, quantite) {
-
-
-
-    localStorage.setItem("panier", JSON.stringify([id, couleur, quantite]));
-
     // controle  couleur présent et  q >0 <100
-    /*if (couleur == "" || quantite < 0 || quantite > 100) { alert('Séletionnez une couleur ET une quantité'); }
+    if (couleur == "" || quantite <= 0 || quantite > 100) { alert('Séletionnez une couleur ET une quantité >0 et <100'); }
     else {
-
-        // enrgistre dans locale storage panier
-
-        localStorage.setItem("panier", JSON.stringify([id, couleur, quantite]));
-    }*/
-
+        localStorage.setItem("panier", JSON.stringify([id, couleur, quantite])) 
+    };
+      
 };
