@@ -29,16 +29,16 @@ export function addCart(id, couleur, quantite) {
 
         //check produit même couleur déja présent    
         let foundProduct = panier.find(p => p.ID == produit.ID);
-        alert(produit.couleur);
-        if (foundProduct != undefined && produit.couleur == foundProduct.couleur) {
             
-           let somA = parseInt(quantite,10);          
-           let somB = parseInt(foundProduct.Q,10);
-           let somQ =somA + somB;
-           produit.Q = somQ;
-           foundProduct.Q =somQ;
-           console.log(foundProduct);
-           sauveCart(panier);
+        if (foundProduct != undefined && produit.couleur == foundProduct.couleur) {
+
+            let somA = parseInt(quantite, 10);
+            let somB = parseInt(foundProduct.Q, 10);
+            let somQ = somA + somB;
+            produit.Q = somQ;
+            foundProduct.Q = somQ;
+            console.log(foundProduct);
+            sauveCart(panier);
 
         }
         else {
@@ -47,8 +47,7 @@ export function addCart(id, couleur, quantite) {
             sauveCart(panier);
 
         }
-        
-        
+
 
     };
 };
@@ -57,5 +56,24 @@ function supCart(produit) {
     let panier = recupCart();
     panier = panier.filter(p => p.ID != produit.ID);
     sauveCart(panier);
+
+}
+
+function changeQ(produit, quantite) {
+    let panier = recupCart();
+    let foundProduct = panier.find(p => p.ID == produit.ID);
+    if (foundProduct != undefined) {
+        foundProduct.quantite += quantite;
+        if (foundProduct.quantite <=0) {
+            supCart(foundProduct);
+            
+        }
+        else{
+            sauveCart(panier);
+        }
+
+    }
+    
+    
 
 }
