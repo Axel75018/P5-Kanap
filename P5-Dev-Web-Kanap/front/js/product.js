@@ -1,5 +1,5 @@
 //import ajout panier
-import{ajoutCart} from './cart.js';
+import{addCart} from './cart.js';
 
 
 
@@ -78,8 +78,9 @@ panierAjouts.addEventListener("click", function () {
 // recupération des valeurs au click
 const valCouleur = document.querySelector("#colors").value;
 const valQ = document.querySelector("#quantity").value;    
-    ajoutCart(nameID2,valCouleur, valQ)
+    addCart(nameID2,valCouleur, valQ)
 });
+
 
 /**  ajout panier au click
 
