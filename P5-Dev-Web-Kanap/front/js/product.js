@@ -73,6 +73,9 @@ const valQ = document.querySelector("#quantity").value;
 console.log('check val');
 console.log(valCouleur);
 
+//creation panier vide mauvais endroit test
+
+
 
 panierAjouts.addEventListener("click", function () {
 // recupération des valeurs au click
@@ -80,7 +83,6 @@ const valCouleur = document.querySelector("#colors").value;
 const valQ = document.querySelector("#quantity").value;    
     addCart(nameID2,valCouleur, valQ)
 });
-
 
 /**  ajout panier au click
 
