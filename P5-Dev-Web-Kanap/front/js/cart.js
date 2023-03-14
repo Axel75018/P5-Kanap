@@ -80,11 +80,21 @@ export function changeQ(produit, quantite) {
 
 }
 
+//liste panier
 
+
+    //recup url pour ne s'applique que sur la page cart
+    const urlCourante = document.location.href;
+    alert(urlCourante.indexOf("cart"));
+    if(urlCourante.indexOf("cart")!= -1) {
 // Récupération de l'élément du DOM qui accueillera les fiches
-const sectioncart = document.querySelector(".cart");
+
 let panier = recupCart();
-sectioncart.innerHTML ="";
+
+const sectionCart = document.querySelector("#panier");
+console.log("*****");
+console.log(sectionCart);
+sectionCart.innerHTML="";
 
 
 for ( let i=0; i < panier.length ; i++) {
@@ -130,10 +140,10 @@ for ( let i=0; i < panier.length ; i++) {
 
 
 // attache au dom
-sectioncart.appendChild(pdtArticle);
+sectionCart.appendChild(pdtArticle);
 pdtArticle.appendChild(pdtdivIMG);
 pdtdivIMG.appendChild(pdtIMG);
-sectioncart.appendChild(pdtContent);
+sectionCart.appendChild(pdtContent);
 pdtContent.appendChild(pdtDescription);
 pdtDescription.appendChild(pdtNom);
 pdtDescription.appendChild(pdtCouleur);
@@ -142,6 +152,7 @@ pdtDescription.appendChild(pdtPrix);
 sectioncart.appendChild(pdtSettings);
 pdtSettings.appendChild(pdtdivQ);
 
-
        
-} 
+}
+}
+
