@@ -84,10 +84,9 @@ export function changeQ(produit, quantite) {
 
 
     //recup url pour ne s'applique que sur la page cart
-    const urlCourante = document.location.href;
-    alert(urlCourante.indexOf("cart"));
+    const urlCourante = document.location.href;    
     if(urlCourante.indexOf("cart")!= -1) {
-// Récupération de l'élément du DOM qui accueillera les fiches
+    // Récupération de l'élément du DOM qui accueillera les fiches
 
 let panier = recupCart();
 
@@ -98,7 +97,7 @@ sectionCart.innerHTML="";
 
 
 for ( let i=0; i < panier.length ; i++) {
-    // retrouver le produit du locla storage dans l'API
+    // retrouver le produit du local storage dans l'API
     let pdtJSON = reponseJSON.find(p => p._id == panier[i].ID);
     console.log(pdtJSON);
     // objets à ajouter
@@ -117,7 +116,7 @@ for ( let i=0; i < panier.length ; i++) {
     pdtContent.className="cart__item__content";
 
     const pdtDescription =document.createElement("div");    
-    pdtDescription.className="cart__item__content";
+    pdtDescription.className="cart__item__content__description";
 
 
     const pdtNom = document.createElement("h2");
@@ -138,20 +137,42 @@ for ( let i=0; i < panier.length ; i++) {
     const pdtdivQ = document.createElement("div");
     pdtdivQ.className="cart__item__content__settings__quantity";
 
+    // input
+    const pdtInput = document.createElement('input');
+    pdtInput.value = panier[i].Q;
+    pdtInput.className='itemQuantity';
+    pdtInput.name='itemQuantity';
+    pdtInput.type="number";
+    pdtInput.min=1;
+    pdtInput.max=100;
+
+    //sup
+    const divSup = document.createElement('div');
+    divSup.className='cart__item__content__settings__delete';
+    const parSup = document.createElement('p');
+    parSup.className='deleteItem';
+    parSup.innerText='Supprimer';
+
+
+
 
 // attache au dom
 sectionCart.appendChild(pdtArticle);
 pdtArticle.appendChild(pdtdivIMG);
 pdtdivIMG.appendChild(pdtIMG);
-sectionCart.appendChild(pdtContent);
+pdtArticle.appendChild(pdtContent);
 pdtContent.appendChild(pdtDescription);
 pdtDescription.appendChild(pdtNom);
 pdtDescription.appendChild(pdtCouleur);
 pdtDescription.appendChild(pdtPrix);
 
-sectioncart.appendChild(pdtSettings);
+pdtArticle.appendChild(pdtSettings);
 pdtSettings.appendChild(pdtdivQ);
+pdtdivQ.appendChild(pdtQ);
+pdtdivQ.appendChild(pdtInput);
 
+pdtSettings.appendChild(divSup);
+divSup.appendChild(parSup);
        
 }
 }
