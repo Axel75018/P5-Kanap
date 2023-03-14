@@ -31,8 +31,6 @@ const listeCouleurs = document.querySelector("#colors");
 
 
 // image
-console.log("***imaage***")
-console.log(reponseJSON.imageUrl);
 produitdivIMG.innerHTML = "";
 const produitImg = document.createElement("img");
 produitImg.src = reponseJSON.imageUrl;
@@ -68,18 +66,23 @@ for (let j = 0; j < reponseJSON.colors.length; j++) {
 
 
 const panierAjouts = document.querySelector("#addToCart");
-const valCouleur = document.querySelector("#colors").value;
+const inputCouleur =document.querySelector("#colors");
 const valQ = document.querySelector("#quantity").value;
 
 
 
 //creation panier vide mauvais endroit test
+//recup couleur
+let valCouleur = document.querySelector("#colors").value;
 
+inputCouleur.addEventListener("change", function() {
+valCouleur = document.querySelector("#colors").value;
+alert(valCouleur);
+});
 
 
 panierAjouts.addEventListener("click", function () {
-// recupération des valeurs au click
-const valCouleur = document.querySelector("#colors").value;
+// recupération des Q au click
 const valQ = document.querySelector("#quantity").value;    
-    addCart(nameID2,valCouleur, valQ)
+    addCart(nameID2, valCouleur, valQ);    
 });
