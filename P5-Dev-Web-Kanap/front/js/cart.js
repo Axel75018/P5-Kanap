@@ -3,11 +3,14 @@ const reponse = await fetch(urlAPI);
 //transforme en json exploitable
 const reponseJSON = await reponse.json();
 
+//----------------------------sauveCart------------------------
 
 export function sauveCart(panier) {
 
     localStorage.setItem("panier", JSON.stringify(panier))
 };
+
+//----------------------------recupCart------------------------
 
 export function recupCart() {
     let panier = localStorage.getItem("panier");
@@ -20,51 +23,59 @@ export function recupCart() {
 
 };
 
+//----------------------------addCart------------------------
+
 export function addCart(id, couleur, quantite) {
-    
+    const produit = { 'ID': id, 'couleur': couleur, 'Q': quantite };
     // faire condition sur panier vide !
     const panier = recupCart();
 
-    // controle  couleur présent et  q >0 <100
-    if (couleur == "" || quantite <= 0 || quantite > 100) { alert('Séletionnez une couleur ET une quantité >0 et <100'); }
+    if (panier == "") {
+        alert('panier vide');
+        panier.push(produit);
+        sauveCart(panier);
+
+    }
+
     else {
+    alert('panier existant')
 
-        const produit = { 'ID':id, 'couleur':couleur, 'Q':quantite };
+    //check produit même couleur déja présent    
+    const foundProduct = panier.find(p => p.ID+p.couleur == produit.ID+produit.couleur);
+    console.log("******foundProduct*****");
+    console.log(foundProduct);
+    console.log("******produit.couleur*****");
+    console.log(produit.couleur);
+    //console.log("******foundProduct.couleur*****");
+    //console.log(foundProduct.couleur);
 
-        //check produit même couleur déja présent    
-        const foundProduct = panier.find(p => p.ID == produit.ID);
-        console.log(foundProduct);
-        console.log("******produit.couleur*****");
-        console.log(produit.couleur);
-        console.log("******foundProduct.couleur*****");
-        console.log(foundProduct.couleur);
-        
+            //produit existant dans la même couleur
+            if (foundProduct != undefined && produit.couleur == foundProduct.couleur) {
+                alert('prod existant dans la couleur')
+                let somA = parseInt(quantite, 10);
+                let somB = parseInt(foundProduct.Q, 10);
+                let somQ = somA + somB;
+                        // check que nouvelle plus ancienne Q ok
+                        if (somQ <= 0 || somQ > 100) {
+                            let messAlerte = 'Attention vous avez déja' + somB + ' unités dans le panier ! Vous allez dépasser les 100 unités';
+                            alert(messAlerte);
+                        } 
+                        else {
+                            produit.Q = somQ;
+                            foundProduct.Q = somQ;
+                            sauveCart(panier);
+                        }
 
-        if (foundProduct != undefined && produit.couleur == foundProduct.couleur) {
-            alert('prod existant dans la couleur')
-            let somA = parseInt(quantite, 10);
-            let somB = parseInt(foundProduct.Q, 10);
-            let somQ = somA + somB;
-            if(somQ <= 0 || somQ > 100) {
-                let messAlerte = 'Attention vous avez déja'+ somB+' unités dans le panier ! Vous allez dépasser les 100 unités';
-                alert(messAlerte);
-            } else { 
-                console.log("else");
-                produit.Q = somQ;
-                foundProduct.Q = somQ;                
-                sauveCart(panier);}            
+            } else
+            { // Cas ou combi coul id non existant
+                panier.push(produit);
+                sauveCart(panier);
+            }                                                           
 
-        }
-        else {
+}
+}
+      
 
-            panier.push(produit);
-            sauveCart(panier);
-
-        }
-
-
-    };
-};
 
 export function supCart(produit) {
     let panier = recupCart();
@@ -87,7 +98,6 @@ export function changeQ(produit, quantite) {
         }
 
     }
-
 
 
 }
@@ -157,14 +167,14 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtInput.type = "number";
         pdtInput.min = 1;
         pdtInput.max = 100;
-        pdtInput.id='idligne'+i;
-        pdtInput.addEventListener("input", function(){
+        pdtInput.id = 'idligne' + i;
+        pdtInput.addEventListener("input", function () {
             //alert(pdtInput.value);
             //changeQ(panier[i].ID, pdtInput.value);        
         });
-        
-        
-        
+
+
+
 
         //sup
         const divSup = document.createElement('div');
@@ -197,6 +207,4 @@ if (urlCourante.indexOf("cart") != -1) {
     }
 
     // mise en place des écouteurs et des scripts
-
 }
-

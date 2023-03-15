@@ -67,22 +67,27 @@ for (let j = 0; j < reponseJSON.colors.length; j++) {
 
 const panierAjouts = document.querySelector("#addToCart");
 const inputCouleur =document.querySelector("#colors");
-const valQ = document.querySelector("#quantity").value;
+const inputQ =document.querySelector("#quantity");
+let valQ =0;
+let valCouleur="";
 
 
-
-//creation panier vide mauvais endroit test
-//recup couleur
-let valCouleur = document.querySelector("#colors").value;
-
+//recup couleur sur add changement du select
 inputCouleur.addEventListener("change", function() {
-valCouleur = document.querySelector("#colors").value;
-alert(valCouleur);
+valCouleur = inputCouleur.value;
 });
 
+// recupération des Q au change input
+inputQ.addEventListener("change", function() {
+        valQ = parseInt(inputQ.value,10);          
+})
 
-panierAjouts.addEventListener("click", function () {
-// recupération des Q au click
-const valQ = document.querySelector("#quantity").value;    
-    addCart(nameID2, valCouleur, valQ);    
+// au click du bouton appell de la fonction ajout dans le panier
+
+panierAjouts.addEventListener("click", function () {  
+    if (valCouleur == "" || valQ <= 0 || valQ > 100) { alert('1111 Séletionnez une couleur ET une quantité >0 et <100'); }  
+    else {alert(nameID2);
+        addCart(nameID2, valCouleur, valQ);
+    }        
+    
 });
