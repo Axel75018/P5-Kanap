@@ -75,6 +75,7 @@ export function addCart(id, couleur, quantite) {
 }
 }
       
+// Suppppppppppppppppppppppppppppppppppppppp
 
 
 export function supCart(produit) {
@@ -84,25 +85,38 @@ export function supCart(produit) {
 
 }
 
-export function changeQ(produit, quantite) {
-    let panier = recupCart();
-    let foundProduct = panier.find(p => p.ID == produit.ID);
-    if (foundProduct != undefined) {
-        foundProduct.quantite += quantite;
-        if (foundProduct.quantite <= 0) {
-            supCart(foundProduct);
+//Change QQQQQQQQQQQQQQQ
 
+export function changeQ(ID, quantite, couleur) {
+   const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite)};
+    let panier = recupCart();
+    let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
+    //condition inutile
+    if (foundProduct != undefined) {
+        alert('avant increm' + produit);
+        foundProduct.Q = produit.Q;
+        if (foundProduct.Q > 100) {
+            let messAlerte = 'Attention vous avez' + foundProduct.Q + '  Vous allez dépasser les 100 unités';
+            lert(messAlerte);
+            return;
+        } 
+        if (foundProduct.Q <= 0) {
+            alert
+            supCart(foundProduct);
         }
+
+
         else {
             sauveCart(panier);
         }
 
     }
+    window.location.reload();
 
 
 }
 
-//liste panier
+//liste panier----------------------------------------
 
 
 //recup url pour ne s'applique que sur la page cart
@@ -168,9 +182,9 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtInput.min = 1;
         pdtInput.max = 100;
         pdtInput.id = 'idligne' + i;
-        pdtInput.addEventListener("input", function () {
-            //alert(pdtInput.value);
-            //changeQ(panier[i].ID, pdtInput.value);        
+        pdtInput.addEventListener("change", function () {
+            alert(panier[i].ID);
+            changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);        
         });
 
 
