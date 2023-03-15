@@ -85,7 +85,7 @@ export function supCart(produit) {
 
 }
 
-//Change QQQQQQQQQQQQQQQ
+//Change QQQQQQQQQQQQQQQQQQQQQ
 
 export function changeQ(ID, quantite, couleur) {
    const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite)};
@@ -133,6 +133,7 @@ if (urlCourante.indexOf("cart") != -1) {
 
 
     for (let i = 0; i < panier.length; i++) {
+        
         // retrouver le produit du local storage dans l'API
         let pdtJSON = reponseJSON.find(p => p._id == panier[i].ID);
         console.log(pdtJSON);
@@ -191,11 +192,18 @@ if (urlCourante.indexOf("cart") != -1) {
 
 
         //sup
+        
         const divSup = document.createElement('div');
         divSup.className = 'cart__item__content__settings__delete';
         const parSup = document.createElement('p');
         parSup.className = 'deleteItem';
-        parSup.innerText = 'Supprimer';
+        parSup.innerText = 'Supprimer';        
+        parSup.addEventListener('click', function() { 
+
+               supCart({ 'ID': panier[i].ID, 'couleur': pdtInput.value, 'Q': panier[i].couleur});
+               window.location.reload();  
+                  });
+
 
 
 
