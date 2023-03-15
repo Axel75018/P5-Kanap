@@ -31,14 +31,14 @@ export function addCart(id, couleur, quantite) {
     const panier = recupCart();
 
     if (panier == "") {
-        alert('panier vide');
+        
         panier.push(produit);
         sauveCart(panier);
 
     }
 
     else {
-    alert('panier existant')
+    
 
     //check produit même couleur déja présent    
     const foundProduct = panier.find(p => p.ID+p.couleur == produit.ID+produit.couleur);
@@ -51,7 +51,7 @@ export function addCart(id, couleur, quantite) {
 
             //produit existant dans la même couleur
             if (foundProduct != undefined && produit.couleur == foundProduct.couleur) {
-                alert('prod existant dans la couleur')
+                
                 let somA = parseInt(quantite, 10);
                 let somB = parseInt(foundProduct.Q, 10);
                 let somQ = somA + somB;
@@ -79,7 +79,7 @@ export function addCart(id, couleur, quantite) {
 
 
 export function supCart(idCoul) {
-    alert(idCoul);
+    
     let panier = recupCart();
     panier = panier.filter(p => p.ID+p.couleur != idCoul);
     sauveCart(panier);
@@ -94,15 +94,15 @@ export function changeQ(ID, quantite, couleur) {
     let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
     //condition inutile
     if (foundProduct != undefined) {
-        alert('avant increm' + produit);
+        
         foundProduct.Q = produit.Q;
         if (foundProduct.Q > 100) {
             let messAlerte = 'Attention vous avez' + foundProduct.Q + '  Vous allez dépasser les 100 unités';
-            lert(messAlerte);
+            alert(messAlerte);
             return;
         } 
         if (foundProduct.Q <= 0) {
-            alert
+            
             supCart(foundProduct.ID+foundProduct.couleur);
         }
 
@@ -127,17 +127,17 @@ if (urlCourante.indexOf("cart") != -1) {
 
     let panier = recupCart();
 
-    const sectionCart = document.querySelector("#panier");
-    console.log("*****");
-    console.log(sectionCart);
+    const sectionCart = document.querySelector("#panier");    
     sectionCart.innerHTML = "";
+    let totalQ = 0;
+    let totalPrix = 0;
 
 
     for (let i = 0; i < panier.length; i++) {
         
         // retrouver le produit du local storage dans l'API
         let pdtJSON = reponseJSON.find(p => p._id == panier[i].ID);
-        console.log(pdtJSON);
+        
         // objets à ajouter
 
         const pdtArticle = document.createElement("article");
@@ -185,7 +185,7 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtInput.max = 100;
         pdtInput.id = 'idligne' + i;
         pdtInput.addEventListener("change", function () {
-            alert(panier[i].ID);
+           
             changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);        
         });
 
@@ -227,7 +227,17 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtSettings.appendChild(divSup);
         divSup.appendChild(parSup);
 
+        //total des Q
+        totalQ = totalQ + panier[i].Q;
+
+        //Total prix
+        let Prix= pdtJSON.price;     
+        totalPrix = totalPrix + (panier[i].Q * Prix);      
+
+
     }
+    // affichage Q et Prix
+    
 
     // mise en place des écouteurs et des scripts
 }
