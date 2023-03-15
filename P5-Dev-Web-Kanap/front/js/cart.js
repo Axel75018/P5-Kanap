@@ -237,7 +237,11 @@ if (urlCourante.indexOf("cart") != -1) {
 
     }
     // affichage Q et Prix
-    
+    const spanTotalQ = document.querySelector("#totalQuantity");
+    spanTotalQ.innerText = totalQ;
+
+    const spanTotalPrix = document.querySelector("#totalPrice");
+    spanTotalPrix.innerText =totalPrix;
 
     // mise en place des écouteurs et des scripts
 }
