@@ -78,9 +78,10 @@ export function addCart(id, couleur, quantite) {
 // Suppppppppppppppppppppppppppppppppppppppp
 
 
-export function supCart(produit) {
+export function supCart(idCoul) {
+    alert(idCoul);
     let panier = recupCart();
-    panier = panier.filter(p => p.ID != produit.ID);
+    panier = panier.filter(p => p.ID+p.couleur != idCoul);
     sauveCart(panier);
 
 }
@@ -102,7 +103,7 @@ export function changeQ(ID, quantite, couleur) {
         } 
         if (foundProduct.Q <= 0) {
             alert
-            supCart(foundProduct);
+            supCart(foundProduct.ID+foundProduct.couleur);
         }
 
 
@@ -200,7 +201,7 @@ if (urlCourante.indexOf("cart") != -1) {
         parSup.innerText = 'Supprimer';        
         parSup.addEventListener('click', function() { 
 
-               supCart({ 'ID': panier[i].ID, 'couleur': pdtInput.value, 'Q': panier[i].couleur});
+               supCart(panier[i].ID+panier[i].couleur);
                window.location.reload();  
                   });
 
