@@ -2,7 +2,6 @@
 import{addCart} from './cart.js';
 
 
-
 // objet URL
 // on recup l'url
 
@@ -67,38 +66,28 @@ for (let j = 0; j < reponseJSON.colors.length; j++) {
 
 
 const panierAjouts = document.querySelector("#addToCart");
-const valCouleur = document.querySelector("#colors").value;
-const valQ = document.querySelector("#quantity").value;
-
-console.log('check val');
-console.log(valCouleur);
-
-//creation panier vide mauvais endroit test
+const inputCouleur =document.querySelector("#colors");
+const inputQ =document.querySelector("#quantity");
+let valQ =0;
+let valCouleur="";
 
 
-
-panierAjouts.addEventListener("click", function () {
-// recupération des valeurs au click
-const valCouleur = document.querySelector("#colors").value;
-const valQ = document.querySelector("#quantity").value;    
-    addCart(nameID2,valCouleur, valQ)
+//recup couleur sur add changement du select
+inputCouleur.addEventListener("change", function() {
+valCouleur = inputCouleur.value;
 });
 
-/**  ajout panier au click
+// recupération des Q au change input
+inputQ.addEventListener("change", function() {
+        valQ = parseInt(inputQ.value,10);          
+})
 
-panierAjouts.addEventListener("click", function () {
-    //Lecture valeur form
+// au click du bouton appell de la fonction ajout dans le panier
+
+panierAjouts.addEventListener("click", function () {  
+    if (valCouleur == "" || valQ <= 0 || valQ > 100) { alert('1111 Séletionnez une couleur ET une quantité >0 et <100'); }  
+    else {alert(nameID2);
+        addCart(nameID2, valCouleur, valQ);
+    }        
     
-
-    // controle  couleur présent et  q >0 <100
-    if (valCouleur == "" || valQ < 0 || valQ > 100) { alert('Séletionnez une couleur ET une quantité'); }
-    else {
-
-
-        // enrgistre dans locale storage panier
-
-        localStorage.setItem("panier", JSON.stringify([nameID2, valCouleur, valQ]))
-    }
-}
-) ;
-**/
+});
