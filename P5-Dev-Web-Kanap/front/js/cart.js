@@ -83,41 +83,11 @@ export function supCart(idCoul) {
 
 }
 
-//Change Q
 
-export function changeQ(ID, quantite, couleur) {
-   const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite)};
-    let panier = recupCart();
-    let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
-    //condition inutile
-    if (foundProduct != undefined) {
-        
-        foundProduct.Q = produit.Q;
-        if (foundProduct.Q > 100) {
-            let messAlerte = 'Attention vous  allez ajouter '+ quantite + 'canapé(s) de couleur' + couleur  + '  Vous allez dépasser les 100 unités';
-            alert(messAlerte);
-            return;
-        } 
-        if (foundProduct.Q <= 0) {
-            
-            supCart(foundProduct.ID+foundProduct.couleur);
-            calculTotal();
-        }
-
-
-        else {
-            sauveCart(panier);
-            calculTotal();            
-        }
-
-    }
-    
-
-
-}
 // calcul et affichage du total
 export function calculTotal() {
-    const panier = recupCart();    
+    const panier = recupCart(); 
+    console.log(panier); 
     const totalQ = 0;
     const totalPrix =0;
     
@@ -264,6 +234,8 @@ if (urlCourante.indexOf("cart") != -1) {
 
 
     }
+
+ 
     // affichage Q et Prix
     calculTotal();
     
@@ -274,4 +246,39 @@ if (urlCourante.indexOf("cart") != -1) {
     spanTotalPrix.innerText =totalPrix; */
     
 }
+
+   //Change Q
+
+   function changeQ(ID, quantite, couleur) {
+    const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite)};
+     let panier = recupCart();
+     let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);    
+          //nouvelle Quantité mise dans le panier mais pas sauvegardéé      
+         foundProduct.Q = produit.Q;
+         // check Q avant+ Q après changement
+         if (foundProduct.Q > 100) {
+             let messAlerte = 'Attention vous  allez ajouter '+ quantite + 'canapé(s) de couleur' + couleur  + '  Vous allez dépasser les 100 unités';
+             alert(messAlerte);
+             return;
+         } 
+         //Suppresion produit
+         if (foundProduct.Q <= 0) {            
+             supCart(foundProduct.ID+foundProduct.couleur);
+             console.log(pdtArticle);
+             //pdtArticle.remove();
+ 
+             calculTotal();
+         }
+ 
+         else {
+             // sauvegarde du panier
+             sauveCart(panier);
+             calculTotal();            
+         }
+ 
+     
+     
+ 
+ 
+ }
 
