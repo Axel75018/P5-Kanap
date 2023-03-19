@@ -82,12 +82,13 @@ inputQ.addEventListener("change", function() {
         valQ = parseInt(inputQ.value,10);          
 })
 
-// au click du bouton appell de la fonction ajout dans le panier
+// au click du bouton commander appell de la fonction ajout dans le panier
 
 panierAjouts.addEventListener("click", function () {  
-    if (valCouleur == "" || valQ <= 0 || valQ > 100) { alert('1111 Séletionnez une couleur ET une quantité >0 et <100'); }  
-    else {alert(nameID2);
+    if (valCouleur == "" || valQ <= 0 || valQ > 100) { alert('Séletionnez une couleur ET une quantité >0 et <100'); }  
+    else {
         addCart(nameID2, valCouleur, valQ);
+        
     }        
     
 });

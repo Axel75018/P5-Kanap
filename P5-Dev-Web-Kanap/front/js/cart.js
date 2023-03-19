@@ -34,6 +34,7 @@ export function addCart(id, couleur, quantite) {
         
         panier.push(produit);
         sauveCart(panier);
+        
 
     }
 
@@ -42,12 +43,7 @@ export function addCart(id, couleur, quantite) {
 
     //check produit même couleur déja présent    
     const foundProduct = panier.find(p => p.ID+p.couleur == produit.ID+produit.couleur);
-    console.log("******foundProduct*****");
-    console.log(foundProduct);
-    console.log("******produit.couleur*****");
-    console.log(produit.couleur);
-    //console.log("******foundProduct.couleur*****");
-    //console.log(foundProduct.couleur);
+    
 
             //produit existant dans la même couleur
             if (foundProduct != undefined && produit.couleur == foundProduct.couleur) {
@@ -57,13 +53,14 @@ export function addCart(id, couleur, quantite) {
                 let somQ = somA + somB;
                         // check que nouvelle plus ancienne Q ok
                         if (somQ <= 0 || somQ > 100) {
-                            let messAlerte = 'Attention vous avez déja' + somB + ' unités dans le panier ! Vous allez dépasser les 100 unités';
+                            let messAlerte = 'Attention vous avez déja ' + somB + ' unités dans le panier ! Vous allez dépasser les 100 unités';
                             alert(messAlerte);
                         } 
                         else {
                             produit.Q = somQ;
                             foundProduct.Q = somQ;
                             sauveCart(panier);
+                            alert(quantite+' canapé(s) '+couleur+' ajouté(s) dans le panier');
                         }
 
             } else
@@ -97,25 +94,58 @@ export function changeQ(ID, quantite, couleur) {
         
         foundProduct.Q = produit.Q;
         if (foundProduct.Q > 100) {
-            let messAlerte = 'Attention vous avez' + foundProduct.Q + '  Vous allez dépasser les 100 unités';
+            let messAlerte = 'Attention vous  allez ajouter '+ quantite + 'canapé(s) de couleur' + couleur  + '  Vous allez dépasser les 100 unités';
             alert(messAlerte);
             return;
         } 
         if (foundProduct.Q <= 0) {
             
             supCart(foundProduct.ID+foundProduct.couleur);
+            calculTotal();
         }
 
 
         else {
             sauveCart(panier);
+            calculTotal();            
         }
 
     }
-    window.location.reload();
+    
 
 
 }
+// calcul et affichage du total
+export function calculTotal() {
+    const panier = recupCart();    
+    const totalQ = 0;
+    const totalPrix =0;
+    
+    /* for (let t = 0; t < panier.length; t++) {
+        let pdtJSON = reponseJSON.find(p => p._id == panier[t].ID);
+       //total des Q    
+       totalQ = totalQ + panier[t].Q;
+       console.log(t);
+       
+
+       //Total prix
+       let Prix= pdtJSON.price;     
+       totalPrix = totalPrix + (panier[t].Q * Prix);
+
+    } /*
+   
+             
+ /*fonction affichage Q et Prix
+   
+ const spanTotalQ = document.querySelector("#totalQuantity");
+ spanTotalQ.innerText = totalQ;
+
+ const spanTotalPrix = document.querySelector("#totalPrice");
+ spanTotalPrix.innerText =totalPrix; */
+
+ };
+
+
 
 //liste panier----------------------------------------
 
@@ -139,7 +169,6 @@ if (urlCourante.indexOf("cart") != -1) {
         let pdtJSON = reponseJSON.find(p => p._id == panier[i].ID);
         
         // objets à ajouter
-
         const pdtArticle = document.createElement("article");
         pdtArticle.className = "cart__item";
         pdtArticle.dataset.id = panier[i].ID;
@@ -185,14 +214,17 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtInput.max = 100;
         pdtInput.id = 'idligne' + i;
         pdtInput.addEventListener("change", function () {
+
            
-            changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);        
+            changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);
+            
+            
+                   
+
         });
 
 
-
-
-        //sup
+        // lien supprimer
         
         const divSup = document.createElement('div');
         divSup.className = 'cart__item__content__settings__delete';
@@ -202,7 +234,8 @@ if (urlCourante.indexOf("cart") != -1) {
         parSup.addEventListener('click', function() { 
 
                supCart(panier[i].ID+panier[i].couleur);
-               window.location.reload();  
+               pdtArticle.remove();  
+               calculTotal();
                   });
 
 
@@ -227,21 +260,18 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtSettings.appendChild(divSup);
         divSup.appendChild(parSup);
 
-        //total des Q
-        totalQ = totalQ + panier[i].Q;
-
-        //Total prix
-        let Prix= pdtJSON.price;     
-        totalPrix = totalPrix + (panier[i].Q * Prix);      
+      
 
 
     }
     // affichage Q et Prix
-    const spanTotalQ = document.querySelector("#totalQuantity");
+    calculTotal();
+    
+    /*const spanTotalQ = document.querySelector("#totalQuantity");
     spanTotalQ.innerText = totalQ;
 
     const spanTotalPrix = document.querySelector("#totalPrice");
-    spanTotalPrix.innerText =totalPrix;
-
-    // mise en place des écouteurs et des scripts
+    spanTotalPrix.innerText =totalPrix; */
+    
 }
+
