@@ -83,7 +83,7 @@ export function supCart(idCoul) {
 
 }
 
-//Change QQQQQQQQQQQQQQQQQQQQQ
+//Change Q
 
 export function changeQ(ID, quantite, couleur) {
    const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite)};
