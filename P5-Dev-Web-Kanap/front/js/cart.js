@@ -209,7 +209,7 @@ if (urlCourante.indexOf("cart") != -1) {
 
                supCart(panier[i].ID+panier[i].couleur);
                pdtArticle.remove();  
-               calculTotal(panier);
+               
                   });
 
 
@@ -255,6 +255,7 @@ if (urlCourante.indexOf("cart") != -1) {
    //Change Q
 
    function changeQ(ID, quantite, couleur) {
+    
     const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite)};
      let panier = recupCart();
 
