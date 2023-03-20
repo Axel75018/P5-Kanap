@@ -37,7 +37,7 @@ produitImg.src = reponseJSON.imageUrl;
 produitImg.alt = reponseJSON.altTxt;
 produitdivIMG.appendChild(produitImg);
 
-// Titre prix
+// Titre prix et meta title
 produitTitlePrice.innerHTML = "";
 const produitNom = document.createElement('h1');
 produitNom.id = "title";
@@ -46,6 +46,7 @@ const produitPrix = document.createElement('p');
 produitPrix.innerHTML = `Prix : <span id="price"> ${reponseJSON.price}</span> €`;
 produitTitlePrice.appendChild(produitNom);
 produitTitlePrice.appendChild(produitPrix);
+document.title = reponseJSON.name;
 
 // Description
 const produitDescriptionTxt = reponseJSON.description;

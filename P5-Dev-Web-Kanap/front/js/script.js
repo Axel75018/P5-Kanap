@@ -3,7 +3,7 @@ const urlAPI = "http://localhost:3000/api/products/"
 const reponse = await fetch(urlAPI);
 //transforme en json exploitable
 const reponseJSON = await reponse.json();
-console.log(reponseJSON);
+
 /*
 console.log(reponseJSON[1]);
 console.log(reponseJSON[1].name);

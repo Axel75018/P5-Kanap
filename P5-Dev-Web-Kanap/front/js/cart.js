@@ -22,6 +22,39 @@ export function recupCart() {
     }
 
 };
+// calcul et affichage du total
+function calculTotal(panier) {       
+    
+    let totalQ = 0;
+    let totalPrix =0;
+    console.log("panier total");
+    console.log(panier);
+   for (let t = 0; t < panier.length; t++) {
+        let pdtJSON = reponseJSON.find(p => p._id == panier[t].ID);
+        console.log("****pdtJSON***");
+        console.log(pdtJSON);
+       //total des Q    
+       totalQ = totalQ + panier[t].Q;
+       console.log(t);
+       console.log(panier[t].Q);
+       
+
+       //Total prix
+       let Prix= pdtJSON.price;            
+       totalPrix = totalPrix + (panier[t].Q * Prix);
+
+    } 
+   
+             
+ //fonction affichage Q et Prix
+   
+ const spanTotalQ = document.querySelector("#totalQuantity");
+ spanTotalQ.innerText = totalQ;
+
+ const spanTotalPrix = document.querySelector("#totalPrice");
+ spanTotalPrix.innerText =totalPrix; 
+
+ };
 
 //----------------------------addCart------------------------
 
@@ -67,54 +100,21 @@ export function addCart(id, couleur, quantite) {
             { // Cas ou combi coul id non existant
                 panier.push(produit);
                 sauveCart(panier);
+                alert(quantite+' canapé(s) '+couleur+' ajouté(s) dans le panier');
             }                                                           
 
 }
 }
       
-// Suppppppppppppppppppppppppppppppppppppppp
-
+// Sup
 
 export function supCart(idCoul) {
     
     let panier = recupCart();
     panier = panier.filter(p => p.ID+p.couleur != idCoul);
     sauveCart(panier);
-
+    calculTotal(panier);
 }
-
-
-// calcul et affichage du total
-export function calculTotal() {
-    const panier = recupCart(); 
-    console.log(panier); 
-    const totalQ = 0;
-    const totalPrix =0;
-    
-    /* for (let t = 0; t < panier.length; t++) {
-        let pdtJSON = reponseJSON.find(p => p._id == panier[t].ID);
-       //total des Q    
-       totalQ = totalQ + panier[t].Q;
-       console.log(t);
-       
-
-       //Total prix
-       let Prix= pdtJSON.price;     
-       totalPrix = totalPrix + (panier[t].Q * Prix);
-
-    } /*
-   
-             
- /*fonction affichage Q et Prix
-   
- const spanTotalQ = document.querySelector("#totalQuantity");
- spanTotalQ.innerText = totalQ;
-
- const spanTotalPrix = document.querySelector("#totalPrice");
- spanTotalPrix.innerText =totalPrix; */
-
- };
-
 
 
 //liste panier----------------------------------------
@@ -124,13 +124,19 @@ export function calculTotal() {
 const urlCourante = document.location.href;
 if (urlCourante.indexOf("cart") != -1) {
     // Récupération de l'élément du DOM qui accueillera les fiches
-
+     
     let panier = recupCart();
 
     const sectionCart = document.querySelector("#panier");    
     sectionCart.innerHTML = "";
     let totalQ = 0;
     let totalPrix = 0;
+    //condition panier vide
+    if (panier=="") {
+        sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
+    }
+    else {
+        
 
 
     for (let i = 0; i < panier.length; i++) {
@@ -158,16 +164,13 @@ if (urlCourante.indexOf("cart") != -1) {
 
         const pdtNom = document.createElement("h2");
         pdtNom.innerText = pdtJSON.name;
-        //console.log(pdtJSON.name);
         const pdtCouleur = document.createElement("p");
         pdtCouleur.innerText = panier[i].couleur;
-        //console.log(pdtCouleur.innerText);
         const pdtPrix = document.createElement("p");
         pdtPrix.innerText = pdtJSON.price + " €";
-        //console.log(pdtPrix.innerText);
         const pdtQ = document.createElement("p");
         pdtQ.innerText = 'Q : ' + panier[i].Q;
-        //console.log(pdtQ.innerText)
+        
 
         const pdtSettings = document.createElement("div");
         pdtSettings.className = "cart__item__content__settings";
@@ -184,9 +187,10 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtInput.max = 100;
         pdtInput.id = 'idligne' + i;
         pdtInput.addEventListener("change", function () {
-
            
             changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);
+            pdtQ.innerText = 'Q : ' + pdtInput.value;          
+            
             
             
                    
@@ -205,7 +209,7 @@ if (urlCourante.indexOf("cart") != -1) {
 
                supCart(panier[i].ID+panier[i].couleur);
                pdtArticle.remove();  
-               calculTotal();
+               calculTotal(panier);
                   });
 
 
@@ -228,30 +232,32 @@ if (urlCourante.indexOf("cart") != -1) {
         pdtdivQ.appendChild(pdtInput);
 
         pdtSettings.appendChild(divSup);
-        divSup.appendChild(parSup);
-
-      
-
+        divSup.appendChild(parSup);   
+       
+       
+        
 
     }
-
- 
-    // affichage Q et Prix
-    calculTotal();
+    // affichage Q totalet Prix
+    calculTotal(panier);
     
-    /*const spanTotalQ = document.querySelector("#totalQuantity");
-    spanTotalQ.innerText = totalQ;
+    
 
-    const spanTotalPrix = document.querySelector("#totalPrice");
-    spanTotalPrix.innerText =totalPrix; */
+          
+   
     
 }
+
+}
+    
+
 
    //Change Q
 
    function changeQ(ID, quantite, couleur) {
     const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite)};
      let panier = recupCart();
+
      let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);    
           //nouvelle Quantité mise dans le panier mais pas sauvegardéé      
          foundProduct.Q = produit.Q;
@@ -264,19 +270,19 @@ if (urlCourante.indexOf("cart") != -1) {
          //Suppresion produit
          if (foundProduct.Q <= 0) {            
              supCart(foundProduct.ID+foundProduct.couleur);
-             console.log(pdtArticle);
+             
              //pdtArticle.remove();
  
-             calculTotal();
+             calculTotal(panier);
          }
  
          else {
              // sauvegarde du panier
              sauveCart(panier);
-             calculTotal();            
+             calculTotal(panier);            
          }
  
-     
+         
      
  
  
