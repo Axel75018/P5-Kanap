@@ -27,16 +27,13 @@ function calculTotal(panier) {
 
     let totalQ = 0;
     let totalPrix = 0;
-    console.log("panier total");
-    console.log(panier);
+   
     for (let t = 0; t < panier.length; t++) {
         let pdtJSON = reponseJSON.find(p => p._id == panier[t].ID);
-        console.log("****pdtJSON***");
-        console.log(pdtJSON);
+      
         //total des Q    
         totalQ = totalQ + panier[t].Q;
-        console.log(t);
-        console.log(panier[t].Q);
+       
 
 
         //Total prix
@@ -134,6 +131,9 @@ if (urlCourante.indexOf("cart") != -1) {
     //condition panier vide
     if (panier == "") {
         sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
+        const divCommander = document.querySelector(".cart__order");
+        divCommander.innerHTML=''; 
+
     }
     else {
 
@@ -190,6 +190,10 @@ if (urlCourante.indexOf("cart") != -1) {
 
                 changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);
                 pdtQ.innerText = 'Q : ' + pdtInput.value;
+                if (pdtInput.value == 0) {
+                    supCart(panier[i].ID+panier[i].couleur);
+                    pdtArticle.remove();
+                }
 
 
 
@@ -240,58 +244,11 @@ if (urlCourante.indexOf("cart") != -1) {
         }
         // affichage Q totalet Prix
         calculTotal(panier);
-
-
-
-
-
+        const tableauPanier = Object.values(panier[0]);
+       
 
     }
-
-}
-
-
-
-//Change Q
-
-function changeQ(ID, quantite, couleur) {
-
-    const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite) };
-    let panier = recupCart();
-
-    let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
-    //nouvelle Quantité mise dans le panier mais pas sauvegardéé      
-    foundProduct.Q = produit.Q;
-    // check Q avant+ Q après changement
-    if (foundProduct.Q > 100) {
-        let messAlerte = 'Attention vous  allez ajouter ' + quantite + 'canapé(s) de couleur' + couleur + '  Vous allez dépasser les 100 unités';
-        alert(messAlerte);
-        return;
-    }
-    //Suppresion produit
-    if (foundProduct.Q <= 0) {
-        supCart(foundProduct.ID + foundProduct.couleur);
-
-        //pdtArticle.remove();
-
-        calculTotal(panier);
-    }
-
-    else {
-        // sauvegarde du panier
-        sauveCart(panier);
-        calculTotal(panier);
-    }
-
-
-
-
-
-}
-
-
-
-// validation formulaire !!!!!
+    // validation formulaire !!!!!
 
 function validateForm() {
     const firstName = document.getElementById("firstName").value.trim();
@@ -356,11 +313,113 @@ function validateForm() {
   
     return isValid;
   }
-  
+ 
+  // ---------------------------------------------------------Submit bouton
   const orderForm = document.querySelector(".cart__order__form");
+
   orderForm.addEventListener("submit", (event) => {
     if (!validateForm()) {
       event.preventDefault();
+    } else {      
+        let contact = {"firstName":firstName,"lastName":lastName,"address":city,"Ville":city,"email":email};  
+        //const produit = { 'ID': id, 'couleur': couleur, 'Q': quantite };
+        let panierID = 
+        envoieServeur(contact,panierID);     
+
+
     }
   });
+
+  
+
+}
+// Usage example:
+const contact = {
+  firstName: 'John',
+  lastName: 'Doe',
+  address:'24 rue du poteau',
+  city:'Paris',
+  email: 'john.doe@example.com'
+};
+
+const products = ['a557292fe5814ea2b15c6ef4bd73ed83'];
+
+let finalOrderObject ={contact, products};
+
+
+envoieServeur(finalOrderObject).then(response => {
+  console.log('finalOrderObject');
+  console.log(finalOrderObject);
+
+ 
+});
+
+ // fonction envoie Post 
+ async function envoieServeur(finalOrderObject) {
+    let chargeUtile = JSON.stringify(finalOrderObject);
+  
+    try {
+      const envoiPost = await fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: chargeUtile
+      });
+  
+      if (!envoiPost.ok) {
+        throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
+      }
+  
+      const retourPost = await envoiPost.json(); // désérialise
+      console.log("...............envoi et recup formulaire.................");
+      console.log(retourPost);
+      return retourPost; // Return the parsed JSON response
+    } catch (error) {
+      console.error('Erreur fetch data:', error);
+      alert(`Erreur: ${error.message}`);
+      return null;
+    }
+  }
+  
+  
+  
+
+//Change Q
+
+function changeQ(ID, quantite, couleur) {
+
+    const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite) };
+    let panier = recupCart();
+
+    let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
+    //nouvelle Quantité mise dans le panier mais pas sauvegardéé      
+    foundProduct.Q = produit.Q;
+    // check Q avant+ Q après changement
+    if (foundProduct.Q > 100) {
+        let messAlerte = 'Attention vous  allez ajouter ' + quantite + 'canapé(s) de couleur' + couleur + '  Vous allez dépasser les 100 unités';
+        alert(messAlerte);
+        return;
+    }
+    //Suppresion produit
+    if (foundProduct.Q <= 0) {
+        supCart(foundProduct.ID + foundProduct.couleur);
+       
+
+        calculTotal(panier);
+    }
+
+    else {
+        // sauvegarde du panier
+        sauveCart(panier);
+        calculTotal(panier);
+    }
+
+
+
+
+
+}
+
+
+
+
   
