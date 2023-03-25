@@ -250,109 +250,135 @@ if (urlCourante.indexOf("cart") != -1) {
     }
     // validation formulaire !!!!!
 
-function validateForm() {
-    const firstName = document.getElementById("firstName").value.trim();
-    const lastName = document.getElementById("lastName").value.trim();
-    const address = document.getElementById("address").value.trim();
-    const city = document.getElementById("city").value.trim();
-    const email = document.getElementById("email").value.trim();
+    function validateForm() {
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const email = document.getElementById("email").value.trim();
   
-    const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/
   
-    let isValid = true;
+      const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/
+      const cityRegex = /^[a-zA-Z\u0080-\u024F]+(?:[ .'-][a-zA-Z\u0080-\u024F]+)*$/;
   
-    if (firstName === "") {
-      document.getElementById("firstNameErrorMsg").innerText = "Le prénom est obligatoire";
-      isValid = false;
-    } else if (!nameRegex.test(firstName)) {
-      document.getElementById("firstNameErrorMsg").innerText = "Le prénom ne doit contenir que des lettres";
-      isValid = false;
-    } else {
-      document.getElementById("firstNameErrorMsg").innerText = "";
-    }
+      let isValid = true;
   
-    if (lastName === "") {
-      document.getElementById("lastNameErrorMsg").innerText = "Le nom est obligatoire";
-      isValid = false;
-    } else if (!nameRegex.test(lastName)) {
-      document.getElementById("lastNameErrorMsg").innerText = "Le nom ne doit contenir que des lettres";
-      isValid = false;
-    } else {
-      document.getElementById("lastNameErrorMsg").innerText = "";
-    }
-  
-    if (address === "") {
-      document.getElementById("addressErrorMsg").innerText = "L'adresse est obligatoire";
-      isValid = false;
-    } else {
-      document.getElementById("addressErrorMsg").innerText = "";
-    }
-  
-    if (city === "") {
-      document.getElementById("cityErrorMsg").innerText = "La ville est obligatoire";
-      isValid = false;
-    } else if (!nameRegex.test(city)) {
-      document.getElementById("cityErrorMsg").innerText = "La ville ne doit contenir que des lettres";
-      isValid = false;
-    } else {
-      document.getElementById("cityErrorMsg").innerText = "";
-    }
-  
-    if (email === "") {
-      document.getElementById("emailErrorMsg").innerText = "L'adresse email est obligatoire";
-      isValid = false;
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        document.getElementById("emailErrorMsg").innerText = "L'adresse email est invalide";
+      if (firstName === "") {
+        document.getElementById("firstNameErrorMsg").innerText = "Le prénom est obligatoire";
+        isValid = false;
+      } else if (!nameRegex.test(firstName)) {
+        document.getElementById("firstNameErrorMsg").innerText = "Le prénom ne doit contenir que des lettres";
         isValid = false;
       } else {
-        document.getElementById("emailErrorMsg").innerText = "";
+        document.getElementById("firstNameErrorMsg").innerText = "";
       }
-    }
   
-    return isValid;
-  }
- 
+      if (lastName === "") {
+        document.getElementById("lastNameErrorMsg").innerText = "Le nom est obligatoire";
+        isValid = false;
+      } else if (!nameRegex.test(lastName)) {
+        document.getElementById("lastNameErrorMsg").innerText = "Le nom ne doit contenir que des lettres";
+        isValid = false;
+      } else {
+        document.getElementById("lastNameErrorMsg").innerText = "";
+      }
+  
+      if (address === "") {
+        document.getElementById("addressErrorMsg").innerText = "L'adresse est obligatoire";
+        isValid = false;
+      } else {
+        document.getElementById("addressErrorMsg").innerText = "";
+      }
+  
+      if (city === "") {
+        document.getElementById("cityErrorMsg").innerText = "La ville est obligatoire";
+        isValid = false;
+      } else if (!cityRegex.test(city)) {
+        document.getElementById("cityErrorMsg").innerText = "La ville ne doit contenir que des lettres";
+        isValid = false;
+      } else {
+        document.getElementById("cityErrorMsg").innerText = "";
+      }
+  
+      if (email === "") {
+        document.getElementById("emailErrorMsg").innerText = "L'adresse email est obligatoire";
+        isValid = false;
+      } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          document.getElementById("emailErrorMsg").innerText = "L'adresse email est invalide";
+          isValid = false;
+        } else {
+          document.getElementById("emailErrorMsg").innerText = "";
+        }
+      }
+  
+      if (isValid) {
+        return {
+          firstName,
+          lastName,
+          address,
+          city,
+          email
+        };
+      } else {
+        return null;
+      }
+  
+    }
   // ---------------------------------------------------------Submit bouton
-  const orderForm = document.querySelector(".cart__order__form");
+ // Select the order form element in the HTML using the "cart__order__form" class
+const orderForm = document.querySelector(".cart__order__form");
 
-  orderForm.addEventListener("submit", (event) => {
-    if (!validateForm()) {
-      event.preventDefault();
-    } else {      
-        let contact = {"firstName":firstName,"lastName":lastName,"address":city,"Ville":city,"email":email};  
-        //const produit = { 'ID': id, 'couleur': couleur, 'Q': quantite };
-        let panierID = 
-        envoieServeur(contact,panierID);     
+// Add an event listener to the order form that triggers when the form is submitted
+orderForm.addEventListener("submit", (event) => {
+  // Call the validateForm function to validate the form data
+  const contact = validateForm();
+
+  // If the form data is invalid, prevent the form from being submitted
+  if (!contact) {
+    event.preventDefault();
+  } else {
+    // If the form data is valid, retrieve the shopping cart data
+    let panier = recupCart();
+    // Transform the shopping cart data into an array of product IDs
+    let products = panier.map(function (obj) {
+      return obj.ID;
+    });
+
+    // Create the final order object containing the contact information and the product IDs
+    let commandeFinale = { contact, products };
+
+    // Send the final order object to the server
+    envoieServeur(commandeFinale).then(retourPost => {
+      console.log(retourPost);
+    });
+
+    // Prevent the form from being submitted the default way
+    event.preventDefault();
+  }
+});
+
+// // Usage example:
+// const contact = {
+//   firstName: 'John',
+//   lastName: 'Doe',
+//   address:'24 rue du poteau',
+//   city:'Paris',
+//   email: 'john.doe@example.com'
+// };
+
+// const products = ['a557292fe5814ea2b15c6ef4bd73ed83'];
+
+// let finalOrderObject ={contact, products};
 
 
-    }
-  });
-
-  
-
-}
-// Usage example:
-const contact = {
-  firstName: 'John',
-  lastName: 'Doe',
-  address:'24 rue du poteau',
-  city:'Paris',
-  email: 'john.doe@example.com'
-};
-
-const products = ['a557292fe5814ea2b15c6ef4bd73ed83'];
-
-let finalOrderObject ={contact, products};
-
-
-envoieServeur(finalOrderObject).then(response => {
-  console.log('finalOrderObject');
-  console.log(finalOrderObject);
+// envoieServeur(finalOrderObject).then(response => {
+//   console.log('finalOrderObject');
+//   console.log(finalOrderObject);
 
  
-});
+// });
 
  // fonction envoie Post 
  async function envoieServeur(finalOrderObject) {
@@ -418,8 +444,4 @@ function changeQ(ID, quantite, couleur) {
 
 
 }
-
-
-
-
-  
+}
