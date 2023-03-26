@@ -397,6 +397,7 @@ if (urlCourante.indexOf("cart") != -1) {
       const retourPost = await envoiPost.json(); // désérialise
       console.log("...............envoi et recup formulaire.................");
       console.log(retourPost);
+      alert(retourPost.orderId);
       return retourPost; // Return the parsed JSON response
     } catch (error) {
       console.error('Erreur fetch data:', error);
