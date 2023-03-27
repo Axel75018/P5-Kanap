@@ -9,15 +9,6 @@ const str = window.location.href; // on recup l'url et on la met dans un string
 const url = new URL(str); // on transforme le strig en objet url
 const nameID = url.searchParams.get("id"); // cherche le param id
 
-/* En vérifiant le parmètre dans l'url
-var str2 = window.location.href;
-var url2 = new URL(str2);
-var search_params = new URLSearchParams(url2.search);
-
-if (search_params.has('id')) {
-    var nameID2 = search_params.get('id');
-
-}*/
 
 // fetch dans lapi du produit nameID
 const urlAPI = `http://localhost:3000/api/products/${nameID}`;

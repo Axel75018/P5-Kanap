@@ -362,7 +362,7 @@ orderForm.addEventListener("submit", (event) => {
     let commandeFinale = { contact, products };
 
     envoieServeur(commandeFinale).then(retourPost => {
-      console.log(retourPost);
+      
       let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}` 
       
       location.assign(paramUrl);
@@ -390,8 +390,7 @@ async function envoieServeur(finalOrderObject) {
     }
 
     const retourPost = await envoiPost.json();
-    localStorage.clear();
-    console.log(panier);
+    localStorage.clear();    
 
     return retourPost;
   } catch (error) {
