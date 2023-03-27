@@ -1,6 +1,6 @@
 //fetch catalogue canapé await pourne pas bloquer l'execution
 const urlAPI = "http://localhost:3000/api/products/"
-const reponse = await fetch(urlAPI);
+const reponse = await fetch(urlAPI); // await pour attendre la réalisation de la promesse
 //transforme en json exploitable, désérialise
 const reponseJSON = await reponse.json();
 
@@ -15,7 +15,7 @@ export function sauveCart(panier) {
 
 export function recupCart() {
   let panier = localStorage.getItem("panier");
-  // condition sur panier , renvoie un tableau vide sipanier vide
+  // condition sur panier , renvoie un tableau vide si panier vide
   if (panier == null) {
     return []
 
@@ -46,7 +46,7 @@ function calculTotal(panier) {
   }
 
 
-  //fonction affichage Q et Prix
+  //affichage Q et Prix
 
   const spanTotalQ = document.querySelector("#totalQuantity");
   spanTotalQ.innerText = totalQ;
@@ -57,16 +57,15 @@ function calculTotal(panier) {
 };
 
 //----------------------------addCart------------------------
-//export pour que la fonction soit utilisée sur la page produit
+//export pour que la fonction soit utilisée sur la page product.js
 export function addCart(id, couleur, quantite) {
   const produit = { 'ID': id, 'couleur': couleur, 'Q': quantite };
   // faire condition sur panier vide !
-  const panier = recupCart();
-
+  const panier = recupCart(); //on récupére le panier
   if (panier == "") {
     // ajout direct au panier si il est vide
 
-    panier.push(produit);
+    panier.push(produit); // ajout de produit a l'array par push de produit
     sauveCart(panier);
     alert(quantite + ' canapé(s) ' + couleur + ' ajouté(s) dans le panier');
 
@@ -74,7 +73,6 @@ export function addCart(id, couleur, quantite) {
   }
 
   else {
-
 
     //check produit même couleur déja présent  en comparant les concatenation id+couleur  
     const foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
@@ -85,13 +83,13 @@ export function addCart(id, couleur, quantite) {
 
       let somA = parseInt(quantite, 10);
       let somB = parseInt(foundProduct.Q, 10);
-      let somQ = somA + somB;
-      // check que nouvelle plus ancienne Q ok <100 et > 0
+      let somQ = somA + somB; // somme Q nouvel ajout et Q panier
+      // check que nouvelle  Q ok <100 et > 0
       if (somQ <= 0 || somQ > 100) {
         let messAlerte = 'Attention vous avez déja ' + somB + ' unités dans le panier ! Vous allez dépasser les 100 unités';
         alert(messAlerte);
       }
-      else {
+      else  { // Q ok
         produit.Q = somQ;
         foundProduct.Q = somQ;
         sauveCart(panier);
@@ -112,10 +110,10 @@ export function addCart(id, couleur, quantite) {
 export function supCart(idCoul) {
 
   let panier = recupCart();
-  panier = panier.filter(p => p.ID + p.couleur != idCoul);
+  panier = panier.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
   sauveCart(panier);
-  calculTotal(panier);
-  if (panier == "") {
+  calculTotal(panier); 
+  if (panier == "") { // on modifie l'affichage si panier vide
     if (urlCourante.indexOf("cart") != -1) {
 
     const sectionCart = document.querySelector("#panier");
@@ -131,7 +129,7 @@ export function supCart(idCoul) {
 //------------------------------------liste + affichage panier----------------------------------------
 
 
-//recup url pour ne s'applique que sur la page cart
+//recup url pour ne s'applique que sur la page cart eviter erreur sur product.html
 const urlCourante = document.location.href;
 if (urlCourante.indexOf("cart") != -1) {
 
@@ -154,7 +152,7 @@ if (urlCourante.indexOf("cart") != -1) {
 
 
 
-    for (let i = 0; i < panier.length; i++) {
+    for (let i = 0; i < panier.length; i++) { // boucle itération panier 
 
       // retrouver le produit du local storage dans l'API
       let pdtJSON = reponseJSON.find(p => p._id == panier[i].ID);
@@ -201,11 +199,11 @@ if (urlCourante.indexOf("cart") != -1) {
       pdtInput.min = 1;
       pdtInput.max = 100;
       pdtInput.id = 'idligne' + i;
-      pdtInput.addEventListener("change", function () {
+      pdtInput.addEventListener("change", function () { // listener sur input 
 
         changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);
         pdtQ.innerText = 'Q : ' + pdtInput.value;
-        if (pdtInput.value == 0) {
+        if (pdtInput.value == 0) { //suppression si panier vide
           supCart(panier[i].ID + panier[i].couleur);
           pdtArticle.remove();
           
@@ -228,8 +226,8 @@ if (urlCourante.indexOf("cart") != -1) {
       parSup.innerText = 'Supprimer';
       parSup.addEventListener('click', function () {
 
-        supCart(panier[i].ID + panier[i].couleur);
-        pdtArticle.remove();
+        supCart(panier[i].ID + panier[i].couleur); // suppression du produit du panier
+        pdtArticle.remove(); // surpression html de l'article produit
         
 
       });
@@ -262,11 +260,11 @@ if (urlCourante.indexOf("cart") != -1) {
     }
     // affichage Q totalet Prix
     calculTotal(panier);
-    const tableauPanier = Object.values(panier[0]);
+    //obsolete ? const tableauPanier = Object.values(panier[0]);
 
 
   }
-  // validation formulaire !!!!!
+  //------------------------------------------------------------------ validation formulaire !!!!!
 
   function validateForm() {
     const firstName = document.getElementById("firstName").value.trim();
@@ -276,18 +274,19 @@ if (urlCourante.indexOf("cart") != -1) {
     const email = document.getElementById("email").value.trim();
 
 
-    const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/
+    const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/ // 
     const cityRegex = /^[a-zA-Z\u0080-\u024F]+(?:[ .'-][a-zA-Z\u0080-\u024F]+)*$/;
 
-    let isValid = true;
+    let isValid = true; 
 
-    if (firstName === "") {
+    if (firstName === "") { //si vide
       document.getElementById("firstNameErrorMsg").innerText = "Le prénom est obligatoire";
       isValid = false;
-    } else if (!nameRegex.test(firstName)) {
+    } else if (!nameRegex.test(firstName)) {  // //else if pour plusieurs conditions 
+      //test regex ko par methode .test() sur firstname vs nameRegex
       document.getElementById("firstNameErrorMsg").innerText = "Le prénom ne doit contenir que des lettres";
       isValid = false;
-    } else {
+    } else { // tout condition fausse isValid true on efface le message d'erreur
       document.getElementById("firstNameErrorMsg").innerText = "";
     }
 
@@ -331,7 +330,7 @@ if (urlCourante.indexOf("cart") != -1) {
       }
     }
 
-    if (isValid) {
+    if (isValid) { // on retourne objet pas encore nomé contact à la fin. retune élargit le scope
       return {
         firstName,
         lastName,
@@ -345,35 +344,67 @@ if (urlCourante.indexOf("cart") != -1) {
     }
 
   }
-  // ---------------------------------------------------------Submit bouton
-  // Select the order form element in the HTML using the "cart__order__form" class
+  // ---------------------------------------------------------bouton- Submit 
+  
   const orderForm = document.querySelector(".cart__order__form");
 
-  // Add an event listener to the order form that triggers when the form is submitted
-  orderForm.addEventListener("submit", (event) => {
-    // Call the validateForm function to validate the form data
-    const contact = validateForm();
+  // ajout du listener sur le formulaire 
+  orderForm.addEventListener("submit", (event) => { //objet event et fonction anonyme fléchée
+    
+    const contact = validateForm(); // fonction valid soit null soit contact rempli
 
-    // If the form data is invalid, prevent the form from being submitted
+    // test contact 
     if (!contact) {
-      event.preventDefault();
+      event.preventDefault(); // utilisation methode preventDefault sur objet event pour empécher envoie formulaire
     } else {
-      // If the form data is valid, retrieve the shopping cart data
+      // Si ok on récupére le panier en localstrage
       let panier = recupCart();
-      // Transform the shopping cart data into an array of product IDs
-      let products = panier.map(function (obj) {
+      // On transforme l'objet en array par itération de la map 
+      let products = panier.map(function (obj) { 
+        // a noter obj est un paramètre qui représente l'élément en cours dans le tableau lors de l'itération.
+        // pas  besoin de let, on aurait pu utiliser n'importe quel nom
         return obj.ID;
       });
 
-      // Create the final order object containing the contact information and the product IDs
+      // objet final à envoyer
       let commandeFinale = { contact, products };
 
-      // Send the final order object to the server
-      envoieServeur(commandeFinale).then(retourPost => {
+      //--------------------------envoie au serveur-----------------------------------------------------
+      envoieServeur(commandeFinale).then(retourPost => { // then pour attendre la promesse// fonction Post async
+        async function envoieServeur(finalOrderObject) {
+          let chargeUtile = JSON.stringify(finalOrderObject); // sérialise ce qui est passé à la fonction
+      
+          try { //test
+            const envoiPost = await fetch("http://localhost:3000/api/products/order", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: chargeUtile
+            });
+      
+            if (!envoiPost.ok) {
+              throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
+            }
+      
+            const retourPost = await envoiPost.json(); // désérialise le retour de post si ok
+            console.log("...............envoi et recup formulaire.................");
+            console.log(retourPost);
+            alert(retourPost.orderId);
+
+            return retourPost; // Return the parsed JSON response
+            // faire variable globale
+            // envoyer a l'url : ?orderid=
+      
+          } catch (error) {
+            console.error('Erreur fetch data:', error);
+            alert(`Erreur: ${error.message}`);
+            return null;
+          }
+        }
         console.log(retourPost);
+
       });
 
-      // Prevent the form from being submitted the default way
+      // empéche l'envoi du formulaire
       event.preventDefault();
     }
   });
@@ -383,7 +414,7 @@ if (urlCourante.indexOf("cart") != -1) {
   async function envoieServeur(finalOrderObject) {
     let chargeUtile = JSON.stringify(finalOrderObject);
 
-    try {
+    try { // test avec gestion des erreur dans catch
       const envoiPost = await fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -391,14 +422,17 @@ if (urlCourante.indexOf("cart") != -1) {
       });
 
       if (!envoiPost.ok) {
-        throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
+        throw new Error(`Erreur HTTP! : ${envoiPost.status}`); // bloque et fait passer à catch
       }
 
-      const retourPost = await envoiPost.json(); // désérialise
+      const retourPost = await envoiPost.json(); // désérialise et crée le retourPost
       console.log("...............envoi et recup formulaire.................");
       console.log(retourPost);
       alert(retourPost.orderId);
       return retourPost; // Return the parsed JSON response
+      // faire variable globale
+      // envoyer a l'url : ?orderid=
+
     } catch (error) {
       console.error('Erreur fetch data:', error);
       alert(`Erreur: ${error.message}`);
