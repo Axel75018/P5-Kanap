@@ -89,7 +89,7 @@ export function addCart(id, couleur, quantite) {
         let messAlerte = 'Attention vous avez déja ' + somB + ' unités dans le panier ! Vous allez dépasser les 100 unités';
         alert(messAlerte);
       }
-      else  { // Q ok
+      else { // Q ok
         produit.Q = somQ;
         foundProduct.Q = somQ;
         sauveCart(panier);
@@ -112,14 +112,14 @@ export function supCart(idCoul) {
   let panier = recupCart();
   panier = panier.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
   sauveCart(panier);
-  calculTotal(panier); 
+  calculTotal(panier);
   if (panier == "") { // on modifie l'affichage si panier vide
     if (urlCourante.indexOf("cart") != -1) {
 
-    const sectionCart = document.querySelector("#panier");
-    sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
-    const divCommander = document.querySelector(".cart__order");
-    divCommander.innerHTML = '';
+      const sectionCart = document.querySelector("#panier");
+      sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
+      const divCommander = document.querySelector(".cart__order");
+      divCommander.innerHTML = '';
     }
 
   }
@@ -143,7 +143,7 @@ if (urlCourante.indexOf("cart") != -1) {
   let totalPrix = 0;
   //condition panier vide
   if (panier == "") {
-        sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
+    sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
     const divCommander = document.querySelector(".cart__order");
     divCommander.innerHTML = '';
 
@@ -206,7 +206,7 @@ if (urlCourante.indexOf("cart") != -1) {
         if (pdtInput.value == 0) { //suppression si panier vide
           supCart(panier[i].ID + panier[i].couleur);
           pdtArticle.remove();
-          
+
         }
 
 
@@ -228,7 +228,7 @@ if (urlCourante.indexOf("cart") != -1) {
 
         supCart(panier[i].ID + panier[i].couleur); // suppression du produit du panier
         pdtArticle.remove(); // surpression html de l'article produit
-        
+
 
       });
 
@@ -277,7 +277,7 @@ if (urlCourante.indexOf("cart") != -1) {
     const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/ // 
     const cityRegex = /^[a-zA-Z\u0080-\u024F]+(?:[ .'-][a-zA-Z\u0080-\u024F]+)*$/;
 
-    let isValid = true; 
+    let isValid = true;
 
     if (firstName === "") { //si vide
       document.getElementById("firstNameErrorMsg").innerText = "Le prénom est obligatoire";
@@ -338,71 +338,71 @@ if (urlCourante.indexOf("cart") != -1) {
         city,
         email
       };
-    } else {      
+    } else {
       return null
-      
+
     }
 
   }
   // ---------------------------------------------------------bouton- Submit 
-  
+
   const orderForm = document.querySelector(".cart__order__form");
 
-orderForm.addEventListener("submit", (event) => {
-  const contact = validateForm();
+  orderForm.addEventListener("submit", (event) => {
+    const contact = validateForm();
 
-  if (!contact) {
-    event.preventDefault();
-  } else {
-    let panier = recupCart();
-    let products = panier.map(function (obj) {
-      return obj.ID;
-    });
+    if (!contact) {
+      event.preventDefault();
+    } else {
+      let panier = recupCart();
+      let products = panier.map(function (obj) {
+        return obj.ID;
+      });
 
-    let commandeFinale = { contact, products };
+      let commandeFinale = { contact, products };
 
-    envoieServeur(commandeFinale).then(retourPost => {
-      
-      let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}` 
-      
-      location.assign(paramUrl);
+      envoieServeur(commandeFinale).then(retourPost => {
 
-      
+        let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}`
 
-    });
+        location.assign(paramUrl);
 
-    event.preventDefault();
-  }
-});
 
-async function envoieServeur(finalOrderObject) {
-  let chargeUtile = JSON.stringify(finalOrderObject);
 
-  try {
-    const envoiPost = await fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: chargeUtile
-    });
+      });
 
-    if (!envoiPost.ok) {
-      throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
+      event.preventDefault();
     }
+  });
 
-    const retourPost = await envoiPost.json();
-    localStorage.clear();    
+  async function envoieServeur(finalOrderObject) {
+    let chargeUtile = JSON.stringify(finalOrderObject);
 
-    return retourPost;
-  } catch (error) {
-    console.error('Erreur fetch data:', error);
-    alert(`Erreur: ${error.message}`);
-    return null;
+    try {
+      const envoiPost = await fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: chargeUtile
+      });
+
+      if (!envoiPost.ok) {
+        throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
+      }
+
+      const retourPost = await envoiPost.json();
+      localStorage.clear();
+
+      return retourPost;
+    } catch (error) {
+      console.error('Erreur fetch data:', error);
+      alert(`Erreur: ${error.message}`);
+      return null;
+    }
   }
-}
 
 
 
-  //Change Q
+  //----------------------------------------Change Q--------------------------------------------------------
 
   function changeQ(ID, quantite, couleur) {
 
