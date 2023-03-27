@@ -363,8 +363,10 @@ orderForm.addEventListener("submit", (event) => {
 
     envoieServeur(commandeFinale).then(retourPost => {
       console.log(retourPost);
-      let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}`
+      let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}` 
+      
       location.assign(paramUrl);
+
       
 
     });

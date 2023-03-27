@@ -75,3 +75,6 @@ const nameID = url.searchParams.get("id");
 // affichage commande
 const spanOrderId = document.querySelector('#orderId');
 spanOrderId.innerText =nameID;
+nameID ='';
+history.pushState(state, title, url);
+

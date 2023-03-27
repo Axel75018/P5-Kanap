@@ -1,15 +1,10 @@
 const urlAPI = "http://localhost:3000/api/products/"
 
-const reponse = await fetch(urlAPI);
-//transforme en json exploitable
-const reponseJSON = await reponse.json();
 
-/*
-console.log(reponseJSON[1]);
-console.log(reponseJSON[1].name);
-const reponseID = await fetch(`${urlAPI}77711f0e466b4ddf953f677d30b0efc9`);
-const reponseIDJSON = await reponseID.json();
-console.log(reponseIDJSON);*/
+const reponse = await fetch(urlAPI); // await attends que la promesse soit complête
+
+const reponseJSON = await reponse.json(); //transforme en json exploitable
+
 
 // Récupération de l'élément du DOM qui accueillera les fiches
 const sectionItems = document.querySelector(".items");
