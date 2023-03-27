@@ -90,7 +90,7 @@ inputQ.addEventListener("change", function() {
 panierAjouts.addEventListener("click", function () {  
     if (valCouleur == "" || valQ <= 0 || valQ > 100) { alert('Séletionnez une couleur ET une quantité >0 et <100'); }  
     else {
-        addCart(nameID2, valCouleur, valQ);
+        addCart(nameID, valCouleur, valQ);
         
     }        
     
