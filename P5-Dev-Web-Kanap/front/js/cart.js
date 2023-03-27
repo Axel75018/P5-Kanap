@@ -348,98 +348,55 @@ if (urlCourante.indexOf("cart") != -1) {
   
   const orderForm = document.querySelector(".cart__order__form");
 
-  // ajout du listener sur le formulaire 
-  orderForm.addEventListener("submit", (event) => { //objet event et fonction anonyme fléchée
-    
-    const contact = validateForm(); // fonction valid soit null soit contact rempli
+orderForm.addEventListener("submit", (event) => {
+  const contact = validateForm();
 
-    // test contact 
-    if (!contact) {
-      event.preventDefault(); // utilisation methode preventDefault sur objet event pour empécher envoie formulaire
-    } else {
-      // Si ok on récupére le panier en localstrage
-      let panier = recupCart();
-      // On transforme l'objet en array par itération de la map 
-      let products = panier.map(function (obj) { 
-        // a noter obj est un paramètre qui représente l'élément en cours dans le tableau lors de l'itération.
-        // pas  besoin de let, on aurait pu utiliser n'importe quel nom
-        return obj.ID;
-      });
+  if (!contact) {
+    event.preventDefault();
+  } else {
+    let panier = recupCart();
+    let products = panier.map(function (obj) {
+      return obj.ID;
+    });
 
-      // objet final à envoyer
-      let commandeFinale = { contact, products };
+    let commandeFinale = { contact, products };
 
-      //--------------------------envoie au serveur-----------------------------------------------------
-      envoieServeur(commandeFinale).then(retourPost => { // then pour attendre la promesse// fonction Post async
-        async function envoieServeur(finalOrderObject) {
-          let chargeUtile = JSON.stringify(finalOrderObject); // sérialise ce qui est passé à la fonction
-      
-          try { //test
-            const envoiPost = await fetch("http://localhost:3000/api/products/order", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: chargeUtile
-            });
-      
-            if (!envoiPost.ok) {
-              throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
-            }
-      
-            const retourPost = await envoiPost.json(); // désérialise le retour de post si ok
-            console.log("...............envoi et recup formulaire.................");
-            console.log(retourPost);
-            alert(retourPost.orderId);
-
-            return retourPost; // Return the parsed JSON response
-            // faire variable globale
-            // envoyer a l'url : ?orderid=
-      
-          } catch (error) {
-            console.error('Erreur fetch data:', error);
-            alert(`Erreur: ${error.message}`);
-            return null;
-          }
-        }
-        console.log(retourPost);
-
-      });
-
-      // empéche l'envoi du formulaire
-      event.preventDefault();
-    }
-  });
-
-
-  // fonction envoie Post 
-  async function envoieServeur(finalOrderObject) {
-    let chargeUtile = JSON.stringify(finalOrderObject);
-
-    try { // test avec gestion des erreur dans catch
-      const envoiPost = await fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: chargeUtile
-      });
-
-      if (!envoiPost.ok) {
-        throw new Error(`Erreur HTTP! : ${envoiPost.status}`); // bloque et fait passer à catch
-      }
-
-      const retourPost = await envoiPost.json(); // désérialise et crée le retourPost
-      console.log("...............envoi et recup formulaire.................");
+    envoieServeur(commandeFinale).then(retourPost => {
       console.log(retourPost);
-      alert(retourPost.orderId);
-      return retourPost; // Return the parsed JSON response
-      // faire variable globale
-      // envoyer a l'url : ?orderid=
+      let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}`
+      location.assign(paramUrl);
+    });
 
-    } catch (error) {
-      console.error('Erreur fetch data:', error);
-      alert(`Erreur: ${error.message}`);
-      return null;
-    }
+    event.preventDefault();
   }
+});
 
+async function envoieServeur(finalOrderObject) {
+  let chargeUtile = JSON.stringify(finalOrderObject);
+
+  try {
+    const envoiPost = await fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: chargeUtile
+    });
+
+    if (!envoiPost.ok) {
+      throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
+    }
+
+    const retourPost = await envoiPost.json();
+    console.log("...............envoi et recup formulaire.................");
+    console.log(retourPost);
+    alert(retourPost.orderId);
+
+    return retourPost;
+  } catch (error) {
+    console.error('Erreur fetch data:', error);
+    alert(`Erreur: ${error.message}`);
+    return null;
+  }
+}
 
 
 
