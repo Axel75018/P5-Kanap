@@ -1,4 +1,4 @@
-// Récupération de l'élément du DOM qui accueillera les fiches
+/* Récupération de l'élément du DOM qui accueillera les fiches
 
 let panier = recupCart();
 const sectionCart = document.querySelector('.cart');
@@ -62,3 +62,16 @@ pdtSettings.appendChild(pdtdivQ);
 
        
 }
+*/
+
+
+// objet URL
+// on recup l'url
+const str = window.location.href;
+const url = new URL(str);
+const nameID = url.searchParams.get("id");
+
+
+// affichage commande
+const spanOrderId = document.querySelector('#orderId');
+spanOrderId.innerText =nameID;

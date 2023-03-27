@@ -365,6 +365,8 @@ orderForm.addEventListener("submit", (event) => {
       console.log(retourPost);
       let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}`
       location.assign(paramUrl);
+      
+
     });
 
     event.preventDefault();
@@ -386,9 +388,8 @@ async function envoieServeur(finalOrderObject) {
     }
 
     const retourPost = await envoiPost.json();
-    console.log("...............envoi et recup formulaire.................");
-    console.log(retourPost);
-    alert(retourPost.orderId);
+    localStorage.clear();
+    console.log(panier);
 
     return retourPost;
   } catch (error) {
