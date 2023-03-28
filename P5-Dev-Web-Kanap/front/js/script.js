@@ -1,9 +1,13 @@
-const urlAPI = "http://localhost:3000/api/products/"
+const urlAPI = "http://localhost:3000/api/products/";
 
+async function fetchData() { // async pour permettre charge desyncho et utilisation await
+  const reponse = await fetch(urlAPI); // await attend que la promesse soit complétée en sérialiséé
+  const reponseJSONawait = await reponse.json(); //transforme la promesse va se transformer en json  
+  return reponseJSONawait; // retourne la la valeur une fois complétée
+  
+}
 
-const reponse = await fetch(urlAPI); // await attends que la promesse soit complête
-
-const reponseJSON = await reponse.json(); //transforme en json exploitable
+fetchData().then(reponseJSON => { // renvoie le fetch un fois complété sur réponseJSOn et execute le scriptt
 
 
 // Récupération de l'élément du DOM qui accueillera les fiches
@@ -34,3 +38,4 @@ for (let i = 0; i < reponseJSON.length; i++) {
     produitArticle.appendChild(produitDescription);
 
 }
+})
