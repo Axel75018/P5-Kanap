@@ -266,28 +266,29 @@ if (urlCourante.indexOf("cart") != -1) {
   }
   //------------------------------------------------------------------ validation formulaire !!!!!
 
-  function validateForm() {
-    const firstName = document.getElementById("firstName").value.trim();
+  function validateForm() { // fonction validation formulaire verif donnée
+    const firstName = document.getElementById("firstName").value.trim(); // trim pour enlever les espace en trop au début et à la fin
     const lastName = document.getElementById("lastName").value.trim();
     const address = document.getElementById("address").value.trim();
     const city = document.getElementById("city").value.trim();
     const email = document.getElementById("email").value.trim();
 
 
-    const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/ // 
-    const cityRegex = /^[a-zA-Z\u0080-\u024F]+(?:[ .'-][a-zA-Z\u0080-\u024F]+)*$/;
+    const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/ // expression réguliére pour les champs sans numéros
+    const cityRegex = /^[a-zA-Z\u0080-\u024F]+(?:[ .'-][a-zA-Z\u0080-\u024F]+)*$/; // idem mais pour ville
 
-    let isValid = true;
+    let isValid = true; // variable pour vérifier que toutes les conditions sont vraies.
 
+    // validation de tout les champs
     if (firstName === "") { //si vide
       document.getElementById("firstNameErrorMsg").innerText = "Le prénom est obligatoire";
       isValid = false;
     } else if (!nameRegex.test(firstName)) {  // //else if pour plusieurs conditions 
       //test regex ko par methode .test() sur firstname vs nameRegex
-      document.getElementById("firstNameErrorMsg").innerText = "Le prénom ne doit contenir que des lettres";
+      document.getElementById("firstNameErrorMsg").innerText = "Le prénom ne doit contenir que des lettres"; //affichage message erreur
       isValid = false;
     } else { // tout condition fausse isValid true on efface le message d'erreur
-      document.getElementById("firstNameErrorMsg").innerText = "";
+      document.getElementById("firstNameErrorMsg").innerText = ""; // suppression message erreur
     }
 
     if (lastName === "") {
@@ -330,7 +331,7 @@ if (urlCourante.indexOf("cart") != -1) {
       }
     }
 
-    if (isValid) { // on retourne objet pas encore nomé contact à la fin. retune élargit le scope
+    if (isValid) { // on retourne objet pas encore nommé contact à la fin. retune élargit le scope
       return {
         firstName,
         lastName,
@@ -344,40 +345,49 @@ if (urlCourante.indexOf("cart") != -1) {
     }
 
   }
-  // ---------------------------------------------------------bouton- Submit 
+  // --------------------------------------------------------- Bouton Submit------------------
 
   const orderForm = document.querySelector(".cart__order__form");
 
-  orderForm.addEventListener("submit", (event) => {
+  // Ajout d'un écouteur d'événement "submit" sur le formulaire de commande utilisation de l'interface event
+  orderForm.addEventListener("submit", (event) => { // fonction anonyme fléchée est exécutée.
+    // Appel de la fonction validateForm pour valider les données du formulaire
     const contact = validateForm();
 
+
     if (!contact) {
-      event.preventDefault();
+      event.preventDefault(); 
     } else {
+
       let panier = recupCart();
-      let products = panier.map(function (obj) {
+
+      let products = panier.map(function (obj) { // map pour transo ojjets  en array d'id par iteration
         return obj.ID;
       });
 
+
       let commandeFinale = { contact, products };
 
-      envoieServeur(commandeFinale).then(retourPost => {
+
+      envoieServeur(commandeFinale).then(retourPost => { // then pôur attendre la résolution de la promesse
 
         let paramUrl = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/confirmation.html?id=${retourPost.orderId}`
 
+        // Rediriger vers la page de confirmation
         location.assign(paramUrl);
-
-
-
       });
 
+      // Empêcher la soumission du formulaire
       event.preventDefault();
     }
   });
 
+
   async function envoieServeur(finalOrderObject) {
+    // Convertir l'objet de commande en JSON
     let chargeUtile = JSON.stringify(finalOrderObject);
 
+    //  la requête POST au serveur
     try {
       const envoiPost = await fetch("http://localhost:3000/api/products/order", {
         method: "POST",
@@ -385,20 +395,26 @@ if (urlCourante.indexOf("cart") != -1) {
         body: chargeUtile
       });
 
+      // Si la requête échoue, et renvoie a catch
       if (!envoiPost.ok) {
         throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
       }
 
+
       const retourPost = await envoiPost.json();
+      // Vider le localStorage
       localStorage.clear();
+
 
       return retourPost;
     } catch (error) {
+      // Afficher l'erreur dans la console et alerter l'utilisateur
       console.error('Erreur fetch data:', error);
       alert(`Erreur: ${error.message}`);
       return null;
     }
   }
+
 
 
 
