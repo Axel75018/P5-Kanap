@@ -1,4 +1,7 @@
+//import fetch
+import { fetchData } from './script.js';
 //import ajout panier
+
 import { addCart } from './cart.js';
 
 
@@ -9,14 +12,14 @@ const str = window.location.href; // on recup l'url et on la met dans un string
 const url = new URL(str); // on transforme le strig en objet url
 const nameID = url.searchParams.get("id"); // cherche le param id
 
+fetchData(`http://localhost:3000/api/products/${nameID}`).then(reponseJSON => {
 
 // fetch dans lapi du produit nameID
-const urlAPI = `http://localhost:3000/api/products/${nameID}`;
-const reponse = await fetch(urlAPI);
-const reponseJSON = await reponse.json(); //déserialisation et mise en json de la promesse
-
-
+//const urlAPI = `http://localhost:3000/api/products/${nameID}`;
+//const reponse = await fetch(urlAPI);
+//const reponseJSON = await reponse.json(); //déserialisation et mise en json de la promesse
 // point d'accroche
+
 const produitdivIMG = document.querySelector(".item__img");
 const produitTitlePrice = document.querySelector(".item__content__titlePrice");
 const produitDescription = document.querySelector(".item__content__description");
@@ -86,3 +89,7 @@ panierAjouts.addEventListener("click", function () {
     }
 
 });
+})
+
+
+
