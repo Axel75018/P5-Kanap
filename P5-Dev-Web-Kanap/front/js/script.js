@@ -1,11 +1,7 @@
 const urlAPI = "http://localhost:3000/api/products/";
 
-export async function fetchData(url) { // async pour permettre charge desyncho et utilisation await
-  const reponse = await fetch(url); // await attend que la promesse soit complétée en sérialiséé
-  const reponseJSONawait = await reponse.json(); //transforme la promesse va se transformer en json  
-  return reponseJSONawait; // retourne la la valeur une fois complétée
-  
-}
+//import fetchData
+import { fetchData } from './fonction.js';
 
 fetchData(urlAPI).then(reponseJSON => { // renvoie le fetch un fois complété sur réponseJSOn et execute le scriptt
 

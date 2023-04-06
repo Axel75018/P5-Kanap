@@ -1,6 +1,5 @@
-//import fetch
-import { fetchData } from './script.js';
-//import ajout panier
+//import fetchData
+import { fetchData } from './fonction.js';
 
 import { addCart } from './cart.js';
 
