@@ -1,19 +1,25 @@
+//import fetchData
+import { sauveCart,recupCart } from './fonction.js';
+
+
 //fetch catalogue canapé await pourne pas bloquer l'execution
 const urlAPI = "http://localhost:3000/api/products/"
 const reponse = await fetch(urlAPI); // await pour attendre la réalisation de la promesse
 //transforme en json exploitable, désérialise
 const reponseJSON = await reponse.json();
 
-//----------------------------sauveCart()----------------------a--
+
+
+/*----------------------------sauveCart()----------------------a--
 
 export function sauveCart(panier) {
   // sérialise avant d'ajouter au local storagr
   localStorage.setItem("panier", JSON.stringify(panier))
 };
-
+*/
 //----------------------------recupCart()------------------------
 
-export function recupCart() {
+/*export function recupCart() {
   let panier = localStorage.getItem("panier");
   // condition sur panier , renvoie un tableau vide si panier vide
   if (panier == null) {
@@ -23,7 +29,7 @@ export function recupCart() {
     return JSON.parse(panier);
   }
 
-};
+};*/
 // ----------------------------calcul et affichage du total----------------------------
 function calculTotal(panier) {
 
