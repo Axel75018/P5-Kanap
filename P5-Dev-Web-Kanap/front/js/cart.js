@@ -1,23 +1,20 @@
-//import fetchData
+//import fonction.js
 import { sauveCart,recupCart,fetchData } from './fonction.js';
-
-
 
 //fetch catalogue canapé await pourne pas bloquer l'execution
 const urlAPI = "http://localhost:3000/api/products/";
 
-const reponseJSON = await fetchData(urlAPI);
+fetchData(urlAPI).then(reponseJSON => {
 
-//---------------------fetch data
-
-// ----------------------------calcul et affichage du total----------------------------
-function calculTotal(panier) {
+  // ----------------------------calcul et affichage du total---
+  // en premier parceque appellé ailleurs et cas du panier vide
+  function calculTotal(panier) {
 
   let totalQ = 0;
   let totalPrix = 0;
 
   for (let t = 0; t < panier.length; t++) {
-    //find renvoie la ligne de l'array qui remplit la condition id basse de donnée api = id panier
+    //find renvoie la ligne de l'array qui remplit la condition id base de donnée api = id panier
     let pdtJSON = reponseJSON.find(p => p._id == panier[t].ID);
 
     //total des Q    
@@ -42,24 +39,7 @@ function calculTotal(panier) {
 
 };
 
-
-  // fin du then json
-
-
-
-
-
-
-
-
-
 //------------------------------------liste + affichage panier----------------------------------------
-
-
-//recup url pour ne s'applique que sur la page cart eviter erreur sur product.html
-const urlCourante = document.location.href;
-if (urlCourante.indexOf("cart") != -1) {
-
 
   let panier = recupCart();
   // Récupération de l'élément du DOM qui accueillera les fiches
@@ -185,6 +165,10 @@ if (urlCourante.indexOf("cart") != -1) {
 
 
     }
+
+
+
+
     // affichage Q totalet Prix
     calculTotal(panier);
     //obsolete ? const tableauPanier = Object.values(panier[0]);
@@ -380,7 +364,7 @@ if (urlCourante.indexOf("cart") != -1) {
 
 
   }
-}
+
 
 // ----------------------------Sup cart ----------------------------
 
@@ -401,3 +385,4 @@ function supCart(idCoul) {
 
   }
 }
+})

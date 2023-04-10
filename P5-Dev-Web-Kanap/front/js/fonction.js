@@ -7,8 +7,6 @@ export async function fetchData(url) { // async pour permettre charge desyncho e
     
   }
 
-
-
   //fonctions cart -------------------------------------------------------------------------------
 
   //----------------------------sauveCart()----------------------a--
@@ -18,7 +16,7 @@ export function sauveCart(panier) {
     localStorage.setItem("panier", JSON.stringify(panier))
   };
   
-// recupCart()
+  //----------------------------recupCart()----------------------a--
   export function recupCart() {
     let panier = localStorage.getItem("panier");
     // condition sur panier , renvoie un tableau vide si panier vide
