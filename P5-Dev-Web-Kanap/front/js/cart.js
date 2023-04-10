@@ -8,23 +8,25 @@ fetchData(urlAPI).then(reponseJSON => {
 
   // ----------------------------calcul et affichage du total---
   // en premier parceque appellé ailleurs et cas du panier vide
-  function calculTotal(panier) {
+  //test panier
+  
+  function calculTotal(panierC) {
 
   let totalQ = 0;
   let totalPrix = 0;
 
-  for (let t = 0; t < panier.length; t++) {
+  for (let t = 0; t < panierC.length; t++) {
     //find renvoie la ligne de l'array qui remplit la condition id base de donnée api = id panier
-    let pdtJSON = reponseJSON.find(p => p._id == panier[t].ID);
+    let pdtJSON = reponseJSON.find(p => p._id == panierC[t].ID);
 
     //total des Q    
-    totalQ = totalQ + panier[t].Q;
+    totalQ = totalQ + panierC[t].Q;
 
 
 
     //Total prix
     let Prix = pdtJSON.price;
-    totalPrix = totalPrix + (panier[t].Q * Prix);
+    totalPrix = totalPrix + (panierC[t].Q * Prix);
 
   }
 
@@ -41,7 +43,7 @@ fetchData(urlAPI).then(reponseJSON => {
 
 //------------------------------------liste + affichage panier----------------------------------------
 
-  let panier = recupCart();
+  let panierC = recupCart();
   // Récupération de l'élément du DOM qui accueillera les fiches
 
   const sectionCart = document.querySelector("#panier");
@@ -49,7 +51,7 @@ fetchData(urlAPI).then(reponseJSON => {
   let totalQ = 0;
   let totalPrix = 0;
   //condition panier vide
-  if (panier == "") {
+  if (panierC == "") {
     sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
     const divCommander = document.querySelector(".cart__order");
     divCommander.innerHTML = '';
@@ -59,16 +61,16 @@ fetchData(urlAPI).then(reponseJSON => {
 
 
 
-    for (let i = 0; i < panier.length; i++) { // boucle itération panier 
+    for (let i = 0; i < panierC.length; i++) { // boucle itération panier 
 
       // retrouver le produit du local storage dans l'API
-      let pdtJSON = reponseJSON.find(p => p._id == panier[i].ID);
+      let pdtJSON = reponseJSON.find(p => p._id == panierC[i].ID);
 
       // objets à ajouter
       const pdtArticle = document.createElement("article");
       pdtArticle.className = "cart__item";
-      pdtArticle.dataset.id = panier[i].ID;
-      pdtArticle.dataset.color = panier[i].couleur;
+      pdtArticle.dataset.id = panierC[i].ID;
+      pdtArticle.dataset.color = panierC[i].couleur;
 
       const pdtdivIMG = document.createElement("div");
       pdtdivIMG.className = "cart__item__img";
@@ -85,11 +87,11 @@ fetchData(urlAPI).then(reponseJSON => {
       const pdtNom = document.createElement("h2");
       pdtNom.innerText = pdtJSON.name;
       const pdtCouleur = document.createElement("p");
-      pdtCouleur.innerText = panier[i].couleur;
+      pdtCouleur.innerText = panierC[i].couleur;
       const pdtPrix = document.createElement("p");
       pdtPrix.innerText = pdtJSON.price + " €";
       const pdtQ = document.createElement("p");
-      pdtQ.innerText = 'Q : ' + panier[i].Q;
+      pdtQ.innerText = 'Q : ' + panierC[i].Q;
 
 
       const pdtSettings = document.createElement("div");
@@ -99,7 +101,7 @@ fetchData(urlAPI).then(reponseJSON => {
 
       // input
       const pdtInput = document.createElement('input');
-      pdtInput.value = panier[i].Q;
+      pdtInput.value = panierC[i].Q;
       pdtInput.className = 'itemQuantity';
       pdtInput.name = 'itemQuantity';
       pdtInput.type = "number";
@@ -108,10 +110,10 @@ fetchData(urlAPI).then(reponseJSON => {
       pdtInput.id = 'idligne' + i;
       pdtInput.addEventListener("change", function () { // listener sur input 
 
-        changeQ(panier[i].ID, pdtInput.value, panier[i].couleur);
+        changeQ(panierC[i].ID, pdtInput.value, panierC[i].couleur);
         pdtQ.innerText = 'Q : ' + pdtInput.value;
         if (pdtInput.value == 0) { //suppression si panier vide
-          supCart(panier[i].ID + panier[i].couleur);
+          supCart(panierC[i].ID + panierC[i].couleur);
           pdtArticle.remove();
 
         }
@@ -133,7 +135,7 @@ fetchData(urlAPI).then(reponseJSON => {
       parSup.innerText = 'Supprimer';
       parSup.addEventListener('click', function () {
 
-        supCart(panier[i].ID + panier[i].couleur); // suppression du produit du panier
+        supCart(panierC[i].ID + panierC[i].couleur); // suppression du produit du panier
         pdtArticle.remove(); // surpression html de l'article produit
 
 
@@ -170,7 +172,7 @@ fetchData(urlAPI).then(reponseJSON => {
 
 
     // affichage Q totalet Prix
-    calculTotal(panier);
+    calculTotal(panierC);
     //obsolete ? const tableauPanier = Object.values(panier[0]);
 
 
@@ -270,9 +272,9 @@ fetchData(urlAPI).then(reponseJSON => {
       event.preventDefault(); 
     } else {
 
-      let panier = recupCart();
+      let panierC = recupCart();
 
-      let products = panier.map(function (obj) { // map pour transo ojjets  en array d'id par iteration
+      let products = panierC.map(function (obj) { // map pour transo ojjets  en array d'id par iteration
         return obj.ID;
       });
 
@@ -334,9 +336,9 @@ fetchData(urlAPI).then(reponseJSON => {
   function changeQ(ID, quantite, couleur) {
 
     const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite) };
-    let panier = recupCart();
+    let panierC = recupCart();
 
-    let foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
+    let foundProduct = panierC.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
     //nouvelle Quantité mise dans le panier mais pas sauvegardéé      
     foundProduct.Q = produit.Q;
     // check Q avant+ Q après changement
@@ -350,13 +352,13 @@ fetchData(urlAPI).then(reponseJSON => {
       supCart(foundProduct.ID + foundProduct.couleur);
 
 
-      calculTotal(panier);
+      calculTotal(panierC);
     }
 
     else {
       // sauvegarde du panier
-      sauveCart(panier);
-      calculTotal(panier);
+      sauveCart(panierC);
+      calculTotal(panierC);
     }
 
 
@@ -370,18 +372,18 @@ fetchData(urlAPI).then(reponseJSON => {
 
 function supCart(idCoul) {
 
-  let panier = recupCart();
-  panier = panier.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
-  sauveCart(panier);
-  calculTotal(panier);
-  if (panier == "") { // on modifie l'affichage si panier vide
-    if (urlCourante.indexOf("cart") != -1) {
+  let panierC = recupCart();
+  panierC = panierC.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
+  sauveCart(panierC);
+  calculTotal(panierC);
+  if (panierC == "") { // on modifie l'affichage si panier vide
+    
 
       const sectionCart = document.querySelector("#panier");
       sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
       const divCommander = document.querySelector(".cart__order");
       divCommander.innerHTML = '';
-    }
+   
 
   }
 }

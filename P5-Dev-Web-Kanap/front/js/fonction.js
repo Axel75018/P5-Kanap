@@ -11,20 +11,20 @@ export async function fetchData(url) { // async pour permettre charge desyncho e
 
   //----------------------------sauveCart()----------------------a--
 
-export function sauveCart(panier) {
+export function sauveCart(panierC) {
     // sérialise avant d'ajouter au local storagr
-    localStorage.setItem("panier", JSON.stringify(panier))
+    localStorage.setItem("panier", JSON.stringify(panierC))
   };
   
   //----------------------------recupCart()----------------------a--
   export function recupCart() {
-    let panier = localStorage.getItem("panier");
+    let panierC = localStorage.getItem("panier");
     // condition sur panier , renvoie un tableau vide si panier vide
-    if (panier == null) {
+    if (panierC == null) {
       return []
   
     } else {
-      return JSON.parse(panier);
+      return JSON.parse(panierC);
     }
   
   };
@@ -33,12 +33,12 @@ export function sauveCart(panier) {
 export function addCart(id, couleur, quantite) {
   const produit = { 'ID': id, 'couleur': couleur, 'Q': quantite };
   // faire condition sur panier vide !
-  const panier = recupCart(); //on récupére le panier
-  if (panier == "") {
+  const panierC = recupCart(); //on récupére le panier
+  if (panierC == "") {
     // ajout direct au panier si il est vide
 
-    panier.push(produit); // ajout de produit a l'array par push de produit
-    sauveCart(panier);
+    panierC.push(produit); // ajout de produit a l'array par push de produit
+    sauveCart(panierC);
     alert(quantite + ' canapé(s) ' + couleur + ' ajouté(s) dans le panier');
 
 
@@ -47,7 +47,7 @@ export function addCart(id, couleur, quantite) {
   else {
 
     //check produit même couleur déja présent  en comparant les concatenation id+couleur  
-    const foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
+    const foundProduct = panierC.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
 
 
     //produit existant dans la même couleur
@@ -64,13 +64,13 @@ export function addCart(id, couleur, quantite) {
       else { // Q ok
         produit.Q = somQ;
         foundProduct.Q = somQ;
-        sauveCart(panier);
+        sauveCart(panierC);
         alert(quantite + ' canapé(s) ' + couleur + ' ajouté(s) dans le panier');
       }
 
     } else { // Cas ou combi coul id non existant (mais panier déja rempli)
-      panier.push(produit);
-      sauveCart(panier);
+      panierC.push(produit);
+      sauveCart(panierC);
       alert(quantite + ' canapé(s) ' + couleur + ' ajouté(s) dans le panier');
     }
 

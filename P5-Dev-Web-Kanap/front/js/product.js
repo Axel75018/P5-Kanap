@@ -1,7 +1,6 @@
 //import fetchData
-import { fetchData } from './fonction.js';
+import { fetchData,addCart } from './fonction.js';
 
-import { addCart } from './cart.js';
 
 
 // objet URL
@@ -13,11 +12,6 @@ const nameID = url.searchParams.get("id"); // cherche le param id
 
 fetchData(`http://localhost:3000/api/products/${nameID}`).then(reponseJSON => {
 
-// fetch dans lapi du produit nameID
-//const urlAPI = `http://localhost:3000/api/products/${nameID}`;
-//const reponse = await fetch(urlAPI);
-//const reponseJSON = await reponse.json(); //déserialisation et mise en json de la promesse
-// point d'accroche
 
 const produitdivIMG = document.querySelector(".item__img");
 const produitTitlePrice = document.querySelector(".item__content__titlePrice");
