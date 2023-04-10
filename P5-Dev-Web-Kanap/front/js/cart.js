@@ -1,35 +1,15 @@
 //import fetchData
-import { sauveCart,recupCart } from './fonction.js';
+import { sauveCart,recupCart,fetchData } from './fonction.js';
+
 
 
 //fetch catalogue canapé await pourne pas bloquer l'execution
-const urlAPI = "http://localhost:3000/api/products/"
-const reponse = await fetch(urlAPI); // await pour attendre la réalisation de la promesse
-//transforme en json exploitable, désérialise
-const reponseJSON = await reponse.json();
+const urlAPI = "http://localhost:3000/api/products/";
 
+const reponseJSON = await fetchData(urlAPI);
 
+//---------------------fetch data
 
-/*----------------------------sauveCart()----------------------a--
-
-export function sauveCart(panier) {
-  // sérialise avant d'ajouter au local storagr
-  localStorage.setItem("panier", JSON.stringify(panier))
-};
-*/
-//----------------------------recupCart()------------------------
-
-/*export function recupCart() {
-  let panier = localStorage.getItem("panier");
-  // condition sur panier , renvoie un tableau vide si panier vide
-  if (panier == null) {
-    return []
-
-  } else {
-    return JSON.parse(panier);
-  }
-
-};*/
 // ----------------------------calcul et affichage du total----------------------------
 function calculTotal(panier) {
 
@@ -62,74 +42,15 @@ function calculTotal(panier) {
 
 };
 
-//----------------------------addCart------------------------
-//export pour que la fonction soit utilisée sur la page product.js
-export function addCart(id, couleur, quantite) {
-  const produit = { 'ID': id, 'couleur': couleur, 'Q': quantite };
-  // faire condition sur panier vide !
-  const panier = recupCart(); //on récupére le panier
-  if (panier == "") {
-    // ajout direct au panier si il est vide
 
-    panier.push(produit); // ajout de produit a l'array par push de produit
-    sauveCart(panier);
-    alert(quantite + ' canapé(s) ' + couleur + ' ajouté(s) dans le panier');
+  // fin du then json
 
 
-  }
-
-  else {
-
-    //check produit même couleur déja présent  en comparant les concatenation id+couleur  
-    const foundProduct = panier.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
 
 
-    //produit existant dans la même couleur
-    if (foundProduct != undefined && produit.couleur == foundProduct.couleur) {
 
-      let somA = parseInt(quantite, 10);
-      let somB = parseInt(foundProduct.Q, 10);
-      let somQ = somA + somB; // somme Q nouvel ajout et Q panier
-      // check que nouvelle  Q ok <100 et > 0
-      if (somQ <= 0 || somQ > 100) {
-        let messAlerte = 'Attention vous avez déja ' + somB + ' unités dans le panier ! Vous allez dépasser les 100 unités';
-        alert(messAlerte);
-      }
-      else { // Q ok
-        produit.Q = somQ;
-        foundProduct.Q = somQ;
-        sauveCart(panier);
-        alert(quantite + ' canapé(s) ' + couleur + ' ajouté(s) dans le panier');
-      }
 
-    } else { // Cas ou combi coul id non existant (mais panier déja rempli)
-      panier.push(produit);
-      sauveCart(panier);
-      alert(quantite + ' canapé(s) ' + couleur + ' ajouté(s) dans le panier');
-    }
 
-  }
-}
-
-// ----------------------------Sup cart ----------------------------
-
-export function supCart(idCoul) {
-
-  let panier = recupCart();
-  panier = panier.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
-  sauveCart(panier);
-  calculTotal(panier);
-  if (panier == "") { // on modifie l'affichage si panier vide
-    if (urlCourante.indexOf("cart") != -1) {
-
-      const sectionCart = document.querySelector("#panier");
-      sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
-      const divCommander = document.querySelector(".cart__order");
-      divCommander.innerHTML = '';
-    }
-
-  }
-}
 
 
 //------------------------------------liste + affichage panier----------------------------------------
@@ -457,6 +378,26 @@ if (urlCourante.indexOf("cart") != -1) {
 
 
 
+
+  }
+}
+
+// ----------------------------Sup cart ----------------------------
+
+function supCart(idCoul) {
+
+  let panier = recupCart();
+  panier = panier.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
+  sauveCart(panier);
+  calculTotal(panier);
+  if (panier == "") { // on modifie l'affichage si panier vide
+    if (urlCourante.indexOf("cart") != -1) {
+
+      const sectionCart = document.querySelector("#panier");
+      sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
+      const divCommander = document.querySelector(".cart__order");
+      divCommander.innerHTML = '';
+    }
 
   }
 }
