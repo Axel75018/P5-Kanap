@@ -1,5 +1,5 @@
 //import fonction.js
-import { sauveCart,recupCart,fetchData } from './fonction.js';
+import { sauveCart, recupCart, fetchData } from './fonction.js';
 
 //fetch catalogue canapé await pourne pas bloquer l'execution
 const urlAPI = "http://localhost:3000/api/products/";
@@ -9,39 +9,39 @@ fetchData(urlAPI).then(reponseJSON => {
   // ----------------------------calcul et affichage du total---
   // en premier parceque appellé ailleurs et cas du panier vide
   //test panier
-  
+
   function calculTotal(panierC) {
 
-  let totalQ = 0;
-  let totalPrix = 0;
+    let totalQ = 0;
+    let totalPrix = 0;
 
-  for (let t = 0; t < panierC.length; t++) {
-    //find renvoie la ligne de l'array qui remplit la condition id base de donnée api = id panier
-    let pdtJSON = reponseJSON.find(p => p._id == panierC[t].ID);
+    for (let t = 0; t < panierC.length; t++) {
+      //find renvoie la ligne de l'array qui remplit la condition id base de donnée api = id panier
+      let pdtJSON = reponseJSON.find(p => p._id == panierC[t].ID);
 
-    //total des Q    
-    totalQ = totalQ + panierC[t].Q;
-
-
-
-    //Total prix
-    let Prix = pdtJSON.price;
-    totalPrix = totalPrix + (panierC[t].Q * Prix);
-
-  }
+      //total des Q    
+      totalQ = totalQ + panierC[t].Q;
 
 
-  //affichage Q et Prix
 
-  const spanTotalQ = document.querySelector("#totalQuantity");
-  spanTotalQ.innerText = totalQ;
+      //Total prix
+      let Prix = pdtJSON.price;
+      totalPrix = totalPrix + (panierC[t].Q * Prix);
 
-  const spanTotalPrix = document.querySelector("#totalPrice");
-  spanTotalPrix.innerText = totalPrix;
+    }
 
-};
 
-//------------------------------------liste + affichage panier----------------------------------------
+    //affichage Q et Prix
+
+    const spanTotalQ = document.querySelector("#totalQuantity");
+    spanTotalQ.innerText = totalQ;
+
+    const spanTotalPrix = document.querySelector("#totalPrice");
+    spanTotalPrix.innerText = totalPrix;
+
+  };
+
+  //------------------------------------liste + affichage panier----------------------------------------
 
   let panierC = recupCart();
   // Récupération de l'élément du DOM qui accueillera les fiches
@@ -173,7 +173,62 @@ fetchData(urlAPI).then(reponseJSON => {
 
     // affichage Q totalet Prix
     calculTotal(panierC);
-    //obsolete ? const tableauPanier = Object.values(panier[0]);
+    //----------------------------------------Change Q--------------------------------------------------------
+
+    function changeQ(ID, quantite, couleur) {
+
+      const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite) };
+      let panierC = recupCart();
+
+      let foundProduct = panierC.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
+      //nouvelle Quantité mise dans le panier mais pas sauvegardéé      
+      foundProduct.Q = produit.Q;
+      // check Q avant+ Q après changement
+      if (foundProduct.Q > 100) {
+        let messAlerte = 'Attention vous  allez ajouter ' + quantite + 'canapé(s) de couleur' + couleur + '  Vous allez dépasser les 100 unités';
+        alert(messAlerte);
+        return;
+      }
+      //Suppresion produit
+      if (foundProduct.Q <= 0) {
+        supCart(foundProduct.ID + foundProduct.couleur);
+
+
+        calculTotal(panierC);
+      }
+
+      else {
+        // sauvegarde du panier
+        sauveCart(panierC);
+        calculTotal(panierC);
+      }
+
+
+
+
+
+    }
+
+
+    // ----------------------------Sup cart ----------------------------
+
+    function supCart(idCoul) {
+
+      let panierC = recupCart();
+      panierC = panierC.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
+      sauveCart(panierC);
+      calculTotal(panierC);
+      if (panierC == "") { // on modifie l'affichage si panier vide
+
+
+        const sectionCart = document.querySelector("#panier");
+        sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
+        const divCommander = document.querySelector(".cart__order");
+        divCommander.innerHTML = '';
+
+
+      }
+    }
 
 
   }
@@ -269,7 +324,7 @@ fetchData(urlAPI).then(reponseJSON => {
 
 
     if (!contact) {
-      event.preventDefault(); 
+      event.preventDefault();
     } else {
 
       let panierC = recupCart();
@@ -313,7 +368,7 @@ fetchData(urlAPI).then(reponseJSON => {
         throw new Error(`Erreur HTTP! : ${envoiPost.status}`);
       }
 
-
+      // retour num de commande
       const retourPost = await envoiPost.json();
       // Vider le localStorage
       localStorage.clear();
@@ -331,60 +386,5 @@ fetchData(urlAPI).then(reponseJSON => {
 
 
 
-  //----------------------------------------Change Q--------------------------------------------------------
 
-  function changeQ(ID, quantite, couleur) {
-
-    const produit = { 'ID': ID, 'couleur': couleur, 'Q': parseInt(quantite) };
-    let panierC = recupCart();
-
-    let foundProduct = panierC.find(p => p.ID + p.couleur == produit.ID + produit.couleur);
-    //nouvelle Quantité mise dans le panier mais pas sauvegardéé      
-    foundProduct.Q = produit.Q;
-    // check Q avant+ Q après changement
-    if (foundProduct.Q > 100) {
-      let messAlerte = 'Attention vous  allez ajouter ' + quantite + 'canapé(s) de couleur' + couleur + '  Vous allez dépasser les 100 unités';
-      alert(messAlerte);
-      return;
-    }
-    //Suppresion produit
-    if (foundProduct.Q <= 0) {
-      supCart(foundProduct.ID + foundProduct.couleur);
-
-
-      calculTotal(panierC);
-    }
-
-    else {
-      // sauvegarde du panier
-      sauveCart(panierC);
-      calculTotal(panierC);
-    }
-
-
-
-
-
-  }
-
-
-// ----------------------------Sup cart ----------------------------
-
-function supCart(idCoul) {
-
-  let panierC = recupCart();
-  panierC = panierC.filter(p => p.ID + p.couleur != idCoul); // on filtre sur tout ce qui n'est pas le produit envoyé
-  sauveCart(panierC);
-  calculTotal(panierC);
-  if (panierC == "") { // on modifie l'affichage si panier vide
-    
-
-      const sectionCart = document.querySelector("#panier");
-      sectionCart.innerHTML = '<h2> Le panier est vide !</h2>'
-      const divCommander = document.querySelector(".cart__order");
-      divCommander.innerHTML = '';
-   
-
-  }
-}
 })

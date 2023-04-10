@@ -16,7 +16,3 @@ spanOrderId.innerText = nameID;
 divParent.insertBefore(h2Merci, divConfirmation);
 
 
-// supprime l'historique
-//nameID =0;
-//history.pushState(state, title, url);
-
